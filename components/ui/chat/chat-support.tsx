@@ -1,6 +1,7 @@
 "use client";
+
 import { Send, Maximize2, Minimize2 } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   ChatBubble,
   ChatBubbleAvatar,
@@ -14,16 +15,44 @@ import {
   ExpandableChatFooter,
 } from "@/components/ui/chat/expandable-chat";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
+import { ChatMessageContent } from "@/components/ui/chat/chat-message-content";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import type { ChatAction, ChatAgentResponse } from "@/lib/chat-agent";
 
-// Message type definition
 type Message = {
   id: string;
   content: string;
   role: "user" | "assistant";
   timestamp: Date;
+  actions?: ChatAction[];
+  showContactForm?: boolean;
+  suggestions?: string[];
+  formSubmitted?: boolean;
 };
+
+const GREETING =
+  "Hello! 👋 I'm the WiseMatic virtual assistant. I can help you learn about our services, company info, and connect you with our team at info@wisematic.ca. How can I help you today?";
+
+function createGreetingMessage(): Message {
+  return {
+    id: "1",
+    content: GREETING,
+    role: "assistant",
+    timestamp: new Date(),
+    actions: [
+      { label: "Our Services", type: "quick_reply", value: "What services do you offer?" },
+      { label: "Contact Us", type: "quick_reply", value: "I want to contact someone" },
+      { label: "Contact page", type: "link", value: "/contact-us" },
+    ],
+    suggestions: [
+      "What services do you offer?",
+      "I want to contact someone",
+      "Tell me about AI & ML",
+      "Where is your office?",
+    ],
+  };
+}
 
 export default function ChatSupport() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -31,48 +60,30 @@ export default function ChatSupport() {
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [visibleForms, setVisibleForms] = useState<Record<string, boolean>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
 
-  // Initial greeting message
   useEffect(() => {
-    setMessages([
-      {
-        id: "1",
-        content: "Hello! How can I help you today?",
-        role: "assistant",
-        timestamp: new Date(),
-      },
-    ]);
+    setMessages([createGreetingMessage()]);
   }, []);
 
-  // Auto scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, visibleForms]);
 
-  // Handle new chat
   const handleNewChat = () => {
-    setMessages([
-      {
-        id: "1",
-        content: "Hello! How can I help you today?",
-        role: "assistant",
-        timestamp: new Date(),
-      },
-    ]);
+    setMessages([createGreetingMessage()]);
+    setVisibleForms({});
+    setInputMessage("");
   };
 
-  // Handle message submission
-  const handleSubmit = async (e?: React.FormEvent) => {
-    e?.preventDefault();
+  const sendMessage = useCallback(async (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed || isLoading) return;
 
-    if (!inputMessage.trim()) return;
-
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: inputMessage,
+      content: trimmed,
       role: "user",
       timestamp: new Date(),
     };
@@ -83,49 +94,58 @@ export default function ChatSupport() {
     setIsTyping(true);
 
     try {
-      const response = await fetch("https://srv681293.hstgr.cloud:8053/chat", {
+      const response = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: inputMessage,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: trimmed }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to get response");
-      }
+      if (!response.ok) throw new Error("Failed to get response");
 
-      const data = await response.json();
+      const data: ChatAgentResponse = await response.json();
+      const messageId = (Date.now() + 1).toString();
 
-      // Add AI response
       const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: messageId,
         content: data.response,
         role: "assistant",
         timestamp: new Date(),
+        actions: data.actions,
+        showContactForm: data.showContactForm,
+        suggestions: data.suggestions,
       };
 
       setMessages((prev) => [...prev, aiMessage]);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to get response. Please try again." + error,
-        variant: "destructive",
-      });
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content:
-          "It seems like I'm not getting a response right now. If there's a delay, no worries—I'll try again shortly. Let me know if you need help getting back on track!",
-        role: "assistant",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, aiMessage]);
+
+      if (data.showContactForm) {
+        setVisibleForms((prev) => ({ ...prev, [messageId]: true }));
+      }
+    } catch {
+      toast.error("Failed to get a response. Please try again.");
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          content:
+            "I'm having trouble responding right now. You can reach our team directly at info@wisematic.ca or call (+1) 437-600-3669.",
+          role: "assistant",
+          timestamp: new Date(),
+          actions: [
+            { label: "Email us", type: "email", value: "info@wisematic.ca" },
+            { label: "Call us", type: "phone", value: "+14376003669" },
+            { label: "Contact page", type: "link", value: "/contact-us" },
+          ],
+        },
+      ]);
     } finally {
       setIsLoading(false);
       setIsTyping(false);
     }
+  }, [isLoading]);
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    await sendMessage(inputMessage);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -133,6 +153,31 @@ export default function ChatSupport() {
       e.preventDefault();
       handleSubmit();
     }
+  };
+
+  const handleShowForm = (messageId: string) => {
+    setVisibleForms((prev) => ({ ...prev, [messageId]: true }));
+  };
+
+  const handleFormSuccess = (messageId: string) => {
+    setMessages((prev) =>
+      prev.map((message) =>
+        message.id === messageId ? { ...message, formSubmitted: true } : message,
+      ),
+    );
+    setVisibleForms((prev) => ({ ...prev, [messageId]: false }));
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        content:
+          "Your message has been sent successfully! Our team will get back to you shortly. Is there anything else I can help you with?",
+        role: "assistant",
+        timestamp: new Date(),
+        suggestions: ["What services do you offer?", "Tell me about WiseMatic"],
+      },
+    ]);
   };
 
   return (
@@ -150,14 +195,10 @@ export default function ChatSupport() {
             <Maximize2 className="h-4 w-4" />
           )}
         </Button>
-        <h1 className="text-xl font-semibold">Ask Anything ✨</h1>
-        <p>Our AI assistant’s ready to help.</p>
+        <h1 className="text-xl font-semibold">WiseMatic Assistant</h1>
+        <p>Ask about our services or get in touch with our team.</p>
         <div className="flex gap-2 items-center pt-2">
-          <Button
-            variant="secondary"
-            onClick={handleNewChat}
-            disabled={isLoading}
-          >
+          <Button variant="secondary" onClick={handleNewChat} disabled={isLoading}>
             New Chat
           </Button>
         </div>
@@ -187,7 +228,20 @@ export default function ChatSupport() {
                     : "rounded-lg"
                 }
               >
-                {message.content}
+                {message.role === "user" ? (
+                  message.content
+                ) : (
+                  <ChatMessageContent
+                    content={message.content}
+                    actions={message.formSubmitted ? undefined : message.actions}
+                    showContactForm={message.showContactForm}
+                    showForm={visibleForms[message.id]}
+                    suggestions={message.suggestions}
+                    onQuickReply={sendMessage}
+                    onShowForm={() => handleShowForm(message.id)}
+                    onFormSuccess={() => handleFormSuccess(message.id)}
+                  />
+                )}
               </ChatBubbleMessage>
               {message.role === "user" && (
                 <ChatBubbleAvatar
@@ -224,7 +278,7 @@ export default function ChatSupport() {
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             disabled={isLoading}
-            placeholder={isLoading ? "AI is typing..." : "Type your message..."}
+            placeholder={isLoading ? "Thinking..." : "Ask about our services..."}
             className="flex-1"
           />
           <Button

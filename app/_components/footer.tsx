@@ -154,7 +154,7 @@ export default function Footer() {
                 <p className="flex items-start">
                   <Phone className="w-4 h-4 mr-2 mt-1" />
                   <span>
-                    (+1) 647-375-7149 <br /> (+1) 647-491-0988
+                    (+1) 437-600-3669
                   </span>
                 </p>
                 <p className="flex items-start">
@@ -354,7 +354,7 @@ export default function Footer() {
                 <p className="flex items-start">
                   <Phone className="w-4 h-4 mr-2 mt-1" />
                   <span>
-                    (+1) 647-375-7149 <br /> (+1) 647-491-0988
+                    (+1) 437-600-3669
                   </span>
                 </p>
                 <p className="flex items-start">

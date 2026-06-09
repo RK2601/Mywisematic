@@ -82,7 +82,7 @@ export function ContactForm() {
             <div>
               <h3 className="text-lg font-semibold">Contact Information</h3>
               <p className="text-muted-foreground">Email: info@wisematic.ca</p>
-              <p className="text-muted-foreground">Phone: (+1) 647-375-7149</p>
+              <p className="text-muted-foreground">Phone: (+1) 437-600-3669</p>
             </div>
           </div>
         </div>
