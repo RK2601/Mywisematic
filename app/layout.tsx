@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { headers } from "next/headers";
 import "./globals.css";
 import React from "react";
 import Footer from "@/app/_components/footer";
@@ -28,16 +29,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = headers().get("x-pathname") || "";
+  const isAdminRoute = pathname.startsWith("/admin");
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark text-foreground bg-background font-regular`}
       >
-        <Navbar />
+        {!isAdminRoute && <Navbar />}
         {children}
-        <ChatSupport />
-        <Footer />
-        <Toaster />
+        {!isAdminRoute && <ChatSupport />}
+        {!isAdminRoute && <Footer />}
+        {!isAdminRoute && <Toaster />}
       </body>
     </html>
   );

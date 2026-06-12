@@ -8,12 +8,6 @@ import { Label } from "@/components/ui/label";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { baseURL } from "@/lib/utils";
-
-function canUseDirectAdminLogin(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.location.hostname === "www.wisematic.ca";
-}
 
 export function LoginForm() {
   const [username, setUsername] = useState("");
@@ -34,14 +28,12 @@ export function LoginForm() {
 
     try {
       const payload = { username: username.trim(), password };
-      const useDirectLogin = canUseDirectAdminLogin();
-      const loginUrl = useDirectLogin ? `${baseURL}/api/login` : "/api/login";
 
-      const response = await fetch(loginUrl, {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        ...(useDirectLogin ? { credentials: "include" as const } : {}),
+        credentials: "include",
       });
 
       const data = await response.json().catch(() => ({}));
@@ -56,7 +48,8 @@ export function LoginForm() {
       }
 
       toast.success("Login successful! Redirecting to your dashboard...");
-      window.location.href = data.redirectUrl || `${baseURL}/dashboard`;
+      window.location.href = data.redirectUrl || "/admin/dashboard";
+      return;
     } catch {
       setError("Something went wrong. Please try again later.");
       toast.error("Login failed. Please try again.");
@@ -142,7 +135,7 @@ export function LoginForm() {
             <p className="text-center text-xs text-muted-foreground">
               Having trouble?{" "}
               <a
-                href={`${baseURL}/login`}
+                href="/admin/login"
                 className="text-primary underline underline-offset-2"
               >
                 Sign in on the admin portal
