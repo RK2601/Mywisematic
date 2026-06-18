@@ -20,7 +20,7 @@ export function AdminDataTable({
   return (
     <div className="overflow-hidden rounded-xl border border-white/10 bg-[#12121a]/80">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] text-left text-sm">
+        <table className="w-full min-w-[960px] text-left text-sm">
           <thead className="border-b border-white/10 bg-white/5">
             <tr>
               {columns.map((column) => (

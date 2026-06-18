@@ -5,6 +5,7 @@ import { adminClientFetch } from "@/lib/admin/api-client";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { AdminDataTable } from "@/components/admin/data-table";
 import { AdminLoadingScreen } from "@/components/admin/loading-screen";
+import { ApplicationDocumentLink } from "@/components/admin/application-document-link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -62,6 +63,8 @@ export default function ViewApplicationsPage() {
           { key: "email", label: "Email" },
           { key: "phone", label: "Phone" },
           { key: "job", label: "Job" },
+          { key: "resume", label: "Resume" },
+          { key: "coverLetter", label: "Cover Letter" },
           { key: "date", label: "Applied" },
           { key: "actions", label: "Actions", className: "w-32" },
         ]}
@@ -70,6 +73,18 @@ export default function ViewApplicationsPage() {
           email: item.email,
           phone: item.phone,
           job: item.jobName,
+          resume: (
+            <ApplicationDocumentLink
+              value={item.cvResume}
+              fallbackLabel="Resume"
+            />
+          ),
+          coverLetter: (
+            <ApplicationDocumentLink
+              value={item.coverLetter}
+              fallbackLabel="Cover Letter"
+            />
+          ),
           date: item.appliedAt
             ? new Date(item.appliedAt).toLocaleDateString()
             : "-",
