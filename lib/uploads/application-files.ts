@@ -1,5 +1,5 @@
-export const MAX_APPLICATION_FILE_BYTES = 10 * 1024 * 1024;
-export const MAX_DIRECT_UPLOAD_BYTES = 4 * 1024 * 1024;
+export const MAX_APPLICATION_FILE_BYTES = 4 * 1024 * 1024;
+export const MAX_APPLICATION_TOTAL_BYTES = 4 * 1024 * 1024;
 
 export const ALLOWED_APPLICATION_FILE_TYPES = [
   "application/pdf",
@@ -10,7 +10,7 @@ export const ALLOWED_APPLICATION_FILE_TYPES = [
 
 export function validateApplicationFile(file: File): string | null {
   if (file.size > MAX_APPLICATION_FILE_BYTES) {
-    return `"${file.name}" is too large. Maximum file size is 10 MB.`;
+    return `"${file.name}" is too large. Each file must be 4 MB or smaller.`;
   }
 
   if (
@@ -24,17 +24,16 @@ export function validateApplicationFile(file: File): string | null {
   return null;
 }
 
-export function shouldUseBlobUpload(files: File[]): boolean {
-  if (typeof window === "undefined") return false;
-
-  const onVercel =
-    window.location.hostname.includes("vercel.app") ||
-    window.location.hostname.endsWith("wisematic.ca");
+export function validateApplicationFiles(files: File[]): string | null {
+  for (const file of files) {
+    const error = validateApplicationFile(file);
+    if (error) return error;
+  }
 
   const totalSize = files.reduce((sum, file) => sum + file.size, 0);
-  const hasLargeFile = files.some(
-    (file) => file.size > MAX_DIRECT_UPLOAD_BYTES,
-  );
+  if (totalSize > MAX_APPLICATION_TOTAL_BYTES) {
+    return "Combined file size is too large. Please keep total uploads under 4 MB.";
+  }
 
-  return onVercel || hasLargeFile || totalSize > MAX_DIRECT_UPLOAD_BYTES;
+  return null;
 }

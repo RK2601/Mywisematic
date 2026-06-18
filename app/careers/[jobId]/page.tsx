@@ -10,11 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { uploadApplicationFile } from "@/lib/uploads/blob-client";
-import {
-  shouldUseBlobUpload,
-  validateApplicationFile,
-} from "@/lib/uploads/application-files";
+import { validateApplicationFiles } from "@/lib/uploads/application-files";
 
 interface Job {
   jobId: string;
@@ -111,7 +107,7 @@ export default function JobDetailsPage({
     const { name, files } = e.target;
     if (files && files.length > 0) {
       const file = files[0];
-      const validationError = validateApplicationFile(file);
+      const validationError = validateApplicationFiles([file]);
       if (validationError) {
         toast.error(validationError);
         e.target.value = "";
@@ -144,82 +140,42 @@ export default function JobDetailsPage({
         (file): file is File => file instanceof File && file.size > 0,
       );
 
-      for (const file of filesToUpload) {
-        const validationError = validateApplicationFile(file);
-        if (validationError) {
-          setSubmitError(validationError);
-          return;
-        }
+      const validationError = validateApplicationFiles(filesToUpload);
+      if (validationError) {
+        setSubmitError(validationError);
+        toast.error(validationError);
+        return;
       }
 
-      const appliedAt = new Date().toISOString();
-      const payload = {
-        fullName: formData.fullName || "",
-        jobName: job?.jobName || "",
-        email: formData.email || "",
-        phone: formData.phone || "",
-        appliedAt,
-      };
+      const data = new FormData();
+      data.append("fullName", formData.fullName || "");
+      data.append("jobName", job?.jobName || "");
+      data.append("email", formData.email || "");
+      data.append("phone", formData.phone || "");
+      data.append("appliedAt", new Date().toISOString());
 
-      if (shouldUseBlobUpload(filesToUpload)) {
-        let coverLetter = formData.coverLetter || "";
-        let cvResume = "";
+      if (formData.resume) {
+        data.append("cvResume", formData.resume);
+      }
 
-        if (formData.coverLetterFile) {
-          coverLetter = await uploadApplicationFile(formData.coverLetterFile);
-        }
-
-        if (formData.resume) {
-          cvResume = await uploadApplicationFile(formData.resume);
-        }
-
-        const response = await fetch(`${baseURL}/api/applications/add`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...payload,
-            coverLetter,
-            cvResume,
-          }),
-        });
-
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          throw new Error(
-            typeof result.error === "string"
-              ? result.error
-              : `HTTP error! Status: ${response.status}`,
-          );
-        }
+      if (formData.coverLetterFile) {
+        data.append("coverLetter", formData.coverLetterFile);
       } else {
-        const data = new FormData();
-        Object.entries(payload).forEach(([key, value]) => {
-          data.append(key, value);
-        });
+        data.append("coverLetter", formData.coverLetter || "");
+      }
 
-        if (formData.resume) {
-          data.append("cvResume", formData.resume);
-        }
+      const response = await fetch(`${baseURL}/api/applications/add`, {
+        method: "POST",
+        body: data,
+      });
 
-        if (formData.coverLetterFile) {
-          data.append("coverLetter", formData.coverLetterFile);
-        } else {
-          data.append("coverLetter", formData.coverLetter || "");
-        }
-
-        const response = await fetch(`${baseURL}/api/applications/add`, {
-          method: "POST",
-          body: data,
-        });
-
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          throw new Error(
-            typeof result.error === "string"
-              ? result.error
-              : `HTTP error! Status: ${response.status}`,
-          );
-        }
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(
+          typeof result.error === "string"
+            ? result.error
+            : `HTTP error! Status: ${response.status}`,
+        );
       }
 
       toast.success("Application submitted successfully!", {
@@ -441,7 +397,7 @@ export default function JobDetailsPage({
                     </span>
                   )}
                   <p className="text-xs text-gray-500">
-                    Allowed Type(s): .pdf, .doc, .docx. Max size: 10 MB per file.
+                    Allowed Type(s): .pdf, .doc, .docx. Max 4 MB per file.
                   </p>
                 </div>
 
@@ -481,7 +437,7 @@ export default function JobDetailsPage({
                   </div>
 
                   <p className="text-xs text-gray-500">
-                    Allowed Type(s): .pdf, .doc, .docx. Max size: 10 MB per file.
+                    Allowed Type(s): .pdf, .doc, .docx. Max 4 MB per file.
                   </p>
                 </div>
 
