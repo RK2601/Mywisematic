@@ -10,6 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { uploadApplicationFile } from "@/lib/uploads/blob-client";
+import {
+  shouldUseBlobUpload,
+  validateApplicationFile,
+} from "@/lib/uploads/application-files";
 
 interface Job {
   jobId: string;
@@ -105,7 +110,19 @@ export default function JobDetailsPage({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
     if (files && files.length > 0) {
-      setFormData({ ...formData, [name]: files[0], coverLetter: "" }); // Clear text field if file is uploaded
+      const file = files[0];
+      const validationError = validateApplicationFile(file);
+      if (validationError) {
+        toast.error(validationError);
+        e.target.value = "";
+        return;
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: file,
+        ...(name === "coverLetterFile" ? { coverLetter: "" } : {}),
+      }));
     }
   };
 
@@ -123,40 +140,87 @@ export default function JobDetailsPage({
     }
 
     try {
-      console.log("Form Submitted:", formData);
-      const data = new FormData();
+      const filesToUpload = [formData.resume, formData.coverLetterFile].filter(
+        (file): file is File => file instanceof File && file.size > 0,
+      );
 
-      // Append text data
-      data.append("fullName", formData.fullName || "");
-      data.append("jobName", job?.jobName || "");
-      data.append("email", formData.email || "");
-      data.append("phone", formData.phone || "");
-      data.append("appliedAt", new Date().toISOString());
-
-      // Append file data correctly
-      if (formData.resume) {
-        data.append("cvResume", formData.resume);
+      for (const file of filesToUpload) {
+        const validationError = validateApplicationFile(file);
+        if (validationError) {
+          setSubmitError(validationError);
+          return;
+        }
       }
 
-      if (formData.coverLetterFile) {
-        data.append("coverLetter", formData.coverLetterFile);
+      const appliedAt = new Date().toISOString();
+      const payload = {
+        fullName: formData.fullName || "",
+        jobName: job?.jobName || "",
+        email: formData.email || "",
+        phone: formData.phone || "",
+        appliedAt,
+      };
+
+      if (shouldUseBlobUpload(filesToUpload)) {
+        let coverLetter = formData.coverLetter || "";
+        let cvResume = "";
+
+        if (formData.coverLetterFile) {
+          coverLetter = await uploadApplicationFile(formData.coverLetterFile);
+        }
+
+        if (formData.resume) {
+          cvResume = await uploadApplicationFile(formData.resume);
+        }
+
+        const response = await fetch(`${baseURL}/api/applications/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...payload,
+            coverLetter,
+            cvResume,
+          }),
+        });
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(
+            typeof result.error === "string"
+              ? result.error
+              : `HTTP error! Status: ${response.status}`,
+          );
+        }
       } else {
-        data.append("coverLetter", formData.coverLetter || "");
+        const data = new FormData();
+        Object.entries(payload).forEach(([key, value]) => {
+          data.append(key, value);
+        });
+
+        if (formData.resume) {
+          data.append("cvResume", formData.resume);
+        }
+
+        if (formData.coverLetterFile) {
+          data.append("coverLetter", formData.coverLetterFile);
+        } else {
+          data.append("coverLetter", formData.coverLetter || "");
+        }
+
+        const response = await fetch(`${baseURL}/api/applications/add`, {
+          method: "POST",
+          body: data,
+        });
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(
+            typeof result.error === "string"
+              ? result.error
+              : `HTTP error! Status: ${response.status}`,
+          );
+        }
       }
-
-      const response = await fetch(`${baseURL}/api/applications/add`, {
-        method: "POST",
-        body: data,
-        // Don't set Content-Type header when using FormData
-        // The browser will automatically set the correct multipart/form-data header
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      await response.json();
-      // console.log("Application submitted successfully:", result);
 
       toast.success("Application submitted successfully!", {
         description:
@@ -175,11 +239,14 @@ export default function JobDetailsPage({
       setConsentChecked(false);
     } catch (error) {
       console.error("Error submitting application:", error);
-      setSubmitError("Failed to submit your application. Please try again.");
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to submit your application. Please try again.";
+      setSubmitError(message);
 
       toast.error("Application submission failed", {
-        description:
-          "There was an error submitting your application. Please try again.",
+        description: message,
       });
     } finally {
       setIsSubmitting(false);
@@ -374,7 +441,7 @@ export default function JobDetailsPage({
                     </span>
                   )}
                   <p className="text-xs text-gray-500">
-                    Allowed Type(s): .pdf, .doc, .docx
+                    Allowed Type(s): .pdf, .doc, .docx. Max size: 10 MB per file.
                   </p>
                 </div>
 
@@ -414,7 +481,7 @@ export default function JobDetailsPage({
                   </div>
 
                   <p className="text-xs text-gray-500">
-                    Allowed Type(s): .pdf, .doc, .docx
+                    Allowed Type(s): .pdf, .doc, .docx. Max size: 10 MB per file.
                   </p>
                 </div>
 
