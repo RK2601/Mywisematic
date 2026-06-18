@@ -3,11 +3,12 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import { Application } from "@/lib/db/models/Application";
-import { errorResponse, saveUploadedFile } from "@/lib/api/helpers";
+import { errorResponse } from "@/lib/api/helpers";
 import {
   validateApplicationFile,
   validateApplicationFiles,
 } from "@/lib/uploads/application-files";
+import { storeApplicationUpload } from "@/lib/uploads/store-file";
 
 export async function POST(request: Request) {
   try {
@@ -48,14 +49,14 @@ export async function POST(request: Request) {
 
     let coverLetter = "";
     if (coverLetterField instanceof File && coverLetterField.size > 0) {
-      coverLetter = await saveUploadedFile(coverLetterField, "applications");
+      coverLetter = await storeApplicationUpload(coverLetterField);
     } else {
       coverLetter = String(coverLetterField || "");
     }
 
     let cvResume = "";
     if (cvResumeFile instanceof File && cvResumeFile.size > 0) {
-      cvResume = await saveUploadedFile(cvResumeFile, "applications");
+      cvResume = await storeApplicationUpload(cvResumeFile);
     }
 
     if (!coverLetter && !cvResume) {
@@ -75,6 +76,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, application });
   } catch (error) {
     console.error("POST /api/applications/add:", error);
-    return errorResponse("Failed to submit application.", 500);
+
+    if (error instanceof Error && error.message.includes("MONGODB_URI")) {
+      return errorResponse(
+        "Application service is temporarily unavailable. Please try again later.",
+        503,
+      );
+    }
+
+    return errorResponse(
+      "Failed to submit application. Please check your files are under 4 MB and try again.",
+      500,
+    );
   }
 }
