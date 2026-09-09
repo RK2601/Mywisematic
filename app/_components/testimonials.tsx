@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { TestimonialsSection } from "@/components/blocks/testimonials-with-marquee";
 import { usePathname } from "next/navigation";
 import { baseURL } from "@/lib/utils";
+import { fallbackTestimonials } from "@/lib/data/fallback-testimonials";
 
 interface Testimonial {
   _id: string;
@@ -30,7 +31,15 @@ export default function TestimonialsSectionDemo() {
     if (pathname === "/") {
       return "landing page";
     } else if (pathname === "/services") {
-      return ["saas", "it", "data analytics", "ai & ml", "digital marketing"];
+      return [
+        "saas",
+        "it",
+        "data analytics",
+        "ai & ml",
+        "digital marketing",
+        "ar & vr",
+        "game dev",
+      ];
     } else if (pathname === "/services/ai-ml") {
       return "ai & ml";
     } else if (pathname === "/services/digital-marketing") {
@@ -41,6 +50,10 @@ export default function TestimonialsSectionDemo() {
       return "saas";
     } else if (pathname === "/services/tech-consultation") {
       return "it";
+    } else if (pathname === "/services/ar-vr") {
+      return "ar & vr";
+    } else if (pathname === "/services/game-dev") {
+      return "game dev";
     }
 
     return null;
@@ -67,13 +80,22 @@ export default function TestimonialsSectionDemo() {
   }, []);
 
   // Filter testimonials based on the current route
+  const types = getTypeFromRoute();
   const filteredTestimonials = testimonials.filter((testimonial) => {
-    const types = getTypeFromRoute();
     return types?.includes(testimonial.type.toLowerCase());
   });
 
+  // Fall back to bundled placeholder testimonials when the CMS has none
+  // yet for this page's type(s), so the section is never empty.
+  const sourceTestimonials =
+    filteredTestimonials.length > 0
+      ? filteredTestimonials
+      : fallbackTestimonials.filter((testimonial) =>
+          types?.includes(testimonial.type.toLowerCase()),
+        );
+
   // Map the filtered testimonials to the expected format
-  const formattedTestimonials = filteredTestimonials.map((testimonial) => ({
+  const formattedTestimonials = sourceTestimonials.map((testimonial) => ({
     author: {
       name: testimonial.name,
       avatar: testimonial.avatar,
