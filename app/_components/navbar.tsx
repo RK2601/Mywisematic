@@ -29,9 +29,6 @@ export default function Navbar() {
             <Navigation />
           </NavbarCenter>
           <NavbarRight>
-            <a href="/blogs" className="hidden text-sm md:block font-semibold">
-              Blogs
-            </a>
             <Button variant="default" asChild className="hidden md:inline-flex">
               <a href="/learning-center">Learning Center</a>
             </Button>
@@ -77,12 +74,6 @@ export default function Navbar() {
                     className="text-muted-foreground hover:text-foreground"
                   >
                     Contact Us
-                  </a>
-                  <a
-                    href="/blogs"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Blogs
                   </a>
                   <a
                     href="/learning-center"
