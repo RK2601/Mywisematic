@@ -26,8 +26,16 @@ export function TestimonialsSection({
   testimonials,
   className,
 }: TestimonialsSectionProps) {
-  const firstRow = testimonials.slice(0, Math.ceil(testimonials.length / 2));
-  const secondRow = testimonials.slice(Math.ceil(testimonials.length / 2));
+  // A row needs at least 3-4 distinct cards to not look like the same
+  // person repeating; below that, give both rows the full set instead of
+  // starving one row down to a single testimonial.
+  const canSplitIntoTwoRows = testimonials.length >= 6;
+  const firstRow = canSplitIntoTwoRows
+    ? testimonials.slice(0, Math.ceil(testimonials.length / 2))
+    : testimonials;
+  const secondRow = canSplitIntoTwoRows
+    ? testimonials.slice(Math.ceil(testimonials.length / 2))
+    : testimonials;
 
   return (
     <section
