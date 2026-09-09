@@ -60,6 +60,14 @@ export default function LandingPageHero() {
             insight, empowering businesses to innovate, scale, and succeed in
             the digital age.
           </p>
+
+          <div className="flex justify-center p-8">
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/wisematic-FN7FRGx6AadRqwCwc6FXXsHM9GVNFO.png"
+              alt="WiseMatic Logo"
+              className="h-1/4 w-1/4 object-contain"
+            />
+          </div>
         </div>
       </div>
     </Section>
