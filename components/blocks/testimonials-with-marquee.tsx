@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Marquee } from "@/components/ui/marquee";
 import {
   TestimonialCard,
   TestimonialAuthor,
@@ -25,6 +26,9 @@ export function TestimonialsSection({
   testimonials,
   className,
 }: TestimonialsSectionProps) {
+  const firstRow = testimonials.slice(0, Math.ceil(testimonials.length / 2));
+  const secondRow = testimonials.slice(Math.ceil(testimonials.length / 2));
+
   return (
     <section
       className={cn(
@@ -63,16 +67,17 @@ export function TestimonialsSection({
           </p>
         </div>
 
-        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-          <div className="group flex overflow-hidden p-2 [--gap:1rem] [gap:var(--gap)] flex-row [--duration:100s]">
-            <div className="flex shrink-0 justify-around [gap:var(--gap)] animate-marquee flex-row group-hover:[animation-play-state:paused]">
-              {[...Array(4)].map((_, setIndex) =>
-                testimonials.map((testimonial, i) => (
-                  <TestimonialCard key={`${setIndex}-${i}`} {...testimonial} />
-                )),
-              )}
-            </div>
-          </div>
+        <div className="relative flex w-full flex-col items-center justify-center gap-4 overflow-hidden">
+          <Marquee pauseOnHover className="[--duration:40s]">
+            {firstRow.map((testimonial, i) => (
+              <TestimonialCard key={`row1-${i}`} {...testimonial} />
+            ))}
+          </Marquee>
+          <Marquee reverse pauseOnHover className="[--duration:40s]">
+            {secondRow.map((testimonial, i) => (
+              <TestimonialCard key={`row2-${i}`} {...testimonial} />
+            ))}
+          </Marquee>
 
           {/* Left Shadow */}
           <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-black/50 to-transparent" />
