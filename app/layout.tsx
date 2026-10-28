@@ -28,6 +28,59 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
+
+// Who WiseMatic is, for search engines and AI answer engines (GEO).
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.wisematic.ca/#organization",
+      name: "WiseMatic",
+      legalName: "WiseMatic Inc.",
+      url: "https://www.wisematic.ca",
+      logo: "https://www.wisematic.ca/wisematic.png",
+      email: "info@wisematic.ca",
+      description:
+        "WiseMatic is a Toronto technology company that builds AI and machine learning solutions, SaaS and custom software, AR/VR experiences and games, and provides digital marketing and technology consulting.",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "401, 180 Duncan Mills Road",
+        addressLocality: "Toronto",
+        addressRegion: "ON",
+        postalCode: "M3B 1Z6",
+        addressCountry: "CA",
+      },
+      areaServed: ["Canada", "United States"],
+      knowsAbout: [
+        "Artificial intelligence",
+        "Machine learning",
+        "SaaS development",
+        "Custom software development",
+        "Augmented reality",
+        "Virtual reality",
+        "Game development",
+        "Digital marketing",
+        "Search engine optimization",
+        "Technology consulting",
+      ],
+      sameAs: [
+        "https://www.linkedin.com/company/wisematic-inc/",
+        "https://www.instagram.com/wisematic.inc",
+        "https://www.facebook.com/profile.php?id=61572895260460",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.wisematic.ca/#website",
+      url: "https://www.wisematic.ca",
+      name: "WiseMatic",
+      publisher: { "@id": "https://www.wisematic.ca/#organization" },
+      inLanguage: "en-CA",
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,10 +90,13 @@ export default function RootLayout({
   const isAdminRoute = pathname.startsWith("/admin");
 
   return (
-    <html lang="en">
+    <html lang="en-CA">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark text-foreground bg-background font-regular`}
       >
+        {!isAdminRoute && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+        )}
         {!isAdminRoute && <Navbar />}
         {children}
         {!isAdminRoute && <ChatSupport />}
