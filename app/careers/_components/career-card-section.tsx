@@ -6,6 +6,24 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
 import { baseURL } from "@/lib/utils";
+import { Search, ChevronDown, Layers, Briefcase, MapPin } from "lucide-react";
+
+const controlClass =
+  "h-12 rounded-xl border border-white/10 bg-white/[0.03] text-sm text-foreground transition-colors placeholder:text-muted-foreground/60 hover:border-white/20 focus:border-[#399AD2]/60 focus:outline-none focus:ring-2 focus:ring-[#399AD2]/30";
+
+const FILTERS = [
+  {
+    label: "Category",
+    icon: Layers,
+    options: ["All Categories", "Sales", "Full Stack Developer", "Digital Marketing", "Software Development"],
+  },
+  { label: "Job type", icon: Briefcase, options: ["All Types", "Full Time", "Co-Op"] },
+  {
+    label: "Location",
+    icon: MapPin,
+    options: ["All Locations", "Remote", "Hybrid", "On-Site", "Toronto"],
+  },
+];
 
 // Define the interface for the job objects
 interface Job {
@@ -101,54 +119,46 @@ export default function CareerCardsSection() {
     <Section className="overflow-hidden pb-10">
       <div className="mx-auto flex max-w-container flex-col gap-12 sm:gap-24">
         {/* Filters Section */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          {/* Search Box */}
-          <input
-            type="text"
-            placeholder="Search jobs..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full sm:w-1/2 rounded-lg border p-3 text-sm shadow-sm focus:outline-none focus:ring focus:ring-secondary bg-primary-foreground"
-          />
-
-          {/* Dropdown Filters */}
-          <div className="flex flex-wrap gap-4">
-            {/* Category Filter */}
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="rounded-lg border p-3 text-sm shadow-sm focus:outline-none focus:ring focus:ring-secondary bg-primary-foreground"
-            >
-              <option>All Categories</option>
-              <option>Sales</option>
-              <option>Full Stack Developer</option>
-              <option>Digital Marketing</option>
-              <option>Software Development</option>
-            </select>
-
-            {/* Type Filter */}
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="rounded-lg border p-3 text-sm shadow-sm focus:outline-none focus:ring focus:ring-secondary bg-primary-foreground"
-            >
-              <option>All Types</option>
-              <option>Full Time</option>
-              <option>Co-Op</option>
-            </select>
-
-            {/* Location Filter */}
-            <select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="rounded-lg border p-3 text-sm shadow-sm focus:outline-none focus:ring focus:ring-secondary bg-primary-foreground"
-            >
-              <option>All Locations</option>
-              <option>Remote</option>
-              <option>Hybrid</option>
-              <option>On-Site</option>
-              <option>Toronto</option>
-            </select>
+        <div className="relative z-10 rounded-2xl bg-gradient-to-br from-[#399AD2]/40 via-white/10 to-purple-500/30 p-px shadow-[0_0_60px_-25px_rgba(57,154,210,0.5)]">
+          <div className="flex flex-col gap-3 rounded-2xl bg-background/80 p-3 backdrop-blur-xl lg:flex-row lg:items-center">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="search"
+                aria-label="Search jobs"
+                placeholder="Search jobs by title or keyword..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className={`${controlClass} w-full pl-11`}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:flex">
+              {FILTERS.map(({ label, options, icon: Icon }, i) => {
+                const [value, setValue] = [
+                  [category, setCategory],
+                  [type, setType],
+                  [location, setLocation],
+                ][i] as [string, (v: string) => void];
+                return (
+                  <div key={label} className="relative">
+                    <Icon className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#399AD2]" />
+                    <select
+                      aria-label={label}
+                      value={value}
+                      onChange={(e) => setValue(e.target.value)}
+                      className={`${controlClass} w-full cursor-pointer appearance-none pl-10 pr-10 lg:w-48`}
+                    >
+                      {options.map((o) => (
+                        <option key={o} className="bg-background">
+                          {o}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
