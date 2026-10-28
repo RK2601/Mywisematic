@@ -4,7 +4,6 @@ import { Section } from "@/components/ui/section";
 import React, { memo } from "react";
 import {
   Brain,
-  LineChart,
   Cpu,
   Network,
   Zap,
@@ -27,20 +26,6 @@ const services = [
     ],
     href: "/services/ai-ml",
     color: "text-blue-500",
-  },
-  {
-    title: "Data Analytics",
-    description:
-      "Transform raw data into actionable insights with our comprehensive analytics solutions.",
-    icon: LineChart,
-    features: [
-      "Advanced Analytics",
-      "Cloud Integration",
-      "Data Engineering",
-      "Strategic Architecture",
-    ],
-    href: "/services/data-analytics",
-    color: "text-green-500",
   },
   {
     title: "SaaS Development",

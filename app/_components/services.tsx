@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Brain,
   Cpu,
-  LineChart,
   Network,
   Zap,
   Eye,
@@ -28,20 +27,6 @@ const services = [
     ],
     href: "/services/ai-ml",
     color: "text-blue-500",
-  },
-  {
-    title: "Data Analytics",
-    description:
-      "Transform raw data into actionable insights with our comprehensive analytics solutions.",
-    icon: LineChart,
-    features: [
-      "Advanced Analytics",
-      "Cloud Integration",
-      "Data Engineering",
-      "Strategic Architecture",
-    ],
-    href: "/services/data-analytics",
-    color: "text-green-500",
   },
   {
     title: "SaaS Development",

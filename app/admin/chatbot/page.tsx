@@ -26,8 +26,8 @@ export default function ChatbotAdminPage() {
       setItems(JSON.parse(stored));
     } else {
       const defaults = [
-        { _id: "1", text: "WiseMatic offers AI/ML, SaaS, Data Analytics, AR/VR, Game Dev, Digital Marketing, and Tech Consultation." },
-        { _id: "2", text: "Contact us at info@wisematic.ca or (+1) 437-600-3669." },
+        { _id: "1", text: "WiseMatic offers AI/ML, SaaS, AR/VR, Game Dev, Digital Marketing, and Tech Consultation." },
+        { _id: "2", text: "Contact us at info@wisematic.ca." },
       ];
       setItems(defaults);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));

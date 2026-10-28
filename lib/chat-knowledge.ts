@@ -2,11 +2,10 @@ export const COMPANY = {
   name: "WiseMatic",
   tagline: "Wise and Stellar",
   description:
-    "WiseMatic is a technology company that transforms ideas into digital reality through AI, data analytics, SaaS, AR/VR, game development, digital marketing, and tech consultation.",
+    "WiseMatic is a technology company that transforms ideas into digital reality through AI, SaaS, AR/VR, game development, digital marketing, and tech consultation.",
   email: "info@wisematic.ca",
   salesEmail: "sales@wisematic.ca",
-  phone: "(+1) 437-600-3669",
-  phoneTel: "+14376003669",
+  // phone removed for now; add phone + phoneTel back here when ready
   address: "401, 180 Duncan Mills Road, Toronto, ON, M3B 1Z6",
   contactPage: "/contact-us",
   servicesPage: "/services",
@@ -47,28 +46,6 @@ export const SERVICES: ServiceInfo[] = [
       "nlp",
       "automation",
       "predictive",
-    ],
-  },
-  {
-    title: "Data Analytics",
-    slug: "data-analytics",
-    href: "/services/data-analytics",
-    description:
-      "Transform raw data into actionable insights with comprehensive analytics solutions.",
-    features: [
-      "Advanced Analytics",
-      "Cloud Integration",
-      "Data Engineering",
-      "Strategic Architecture",
-    ],
-    keywords: [
-      "data",
-      "analytics",
-      "insights",
-      "bi",
-      "business intelligence",
-      "data engineering",
-      "reporting",
     ],
   },
   {

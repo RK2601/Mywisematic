@@ -13,7 +13,7 @@ const faqs = [
     id: "item-1",
     question: "What services does WiseMatic provide?",
     answers: [
-      "We specialize in AI & machine learning, data analytics, SaaS development, digital marketing & SEO, and IT infrastructure management to help businesses scale and innovate.",
+      "We specialize in AI & machine learning, SaaS development, digital marketing & SEO, and IT infrastructure management to help businesses scale and innovate.",
       "WiseMatic Inc. helps you manage your business efficiently without compromising on quality.",
     ],
   },

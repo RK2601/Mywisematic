@@ -56,12 +56,6 @@ export default function Navigation() {
               <ListItem href="/services/ai-ml" title="AI & Machine Learning">
                 AI-driven solutions to fuel business growth.
               </ListItem>
-              <ListItem
-                href="/services/data-analytics"
-                title="Data Analytics & Insights"
-              >
-                Turn raw data into actionable business strategies.
-              </ListItem>
               <ListItem href="/services/saas" title="SaaS Development">
                 Custom web and mobile SaaS solutions for scalable growth.
               </ListItem>

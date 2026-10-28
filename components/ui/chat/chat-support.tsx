@@ -127,12 +127,11 @@ export default function ChatSupport() {
         {
           id: (Date.now() + 1).toString(),
           content:
-            "I'm having trouble responding right now. You can reach our team directly at info@wisematic.ca or call (+1) 437-600-3669.",
+            "I'm having trouble responding right now. You can reach our team directly at info@wisematic.ca.",
           role: "assistant",
           timestamp: new Date(),
           actions: [
             { label: "Email us", type: "email", value: "info@wisematic.ca" },
-            { label: "Call us", type: "phone", value: "+14376003669" },
             { label: "Contact page", type: "link", value: "/contact-us" },
           ],
         },

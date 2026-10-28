@@ -86,9 +86,6 @@ export function ContactForm() {
                 <p className="text-muted-foreground">
                   Email: info@wisematic.ca
                 </p>
-                <p className="text-muted-foreground">
-                  Phone: (+1) 437-600-3669
-                </p>
               </div>
             </div>
           </div>

@@ -15,7 +15,6 @@ import {
   Linkedin,
   Send,
   Twitter,
-  Phone,
   LucideMailOpen,
   MapPin,
 } from "lucide-react";
@@ -149,12 +148,6 @@ export default function Footer() {
                   <MapPin className="w-4 h-4 mr-2 mt-1" />
                   <span className="text-left">
                     401, 180 Duncan Mills Road <br /> Toronto, ON, M3B 1Z6
-                  </span>
-                </p>
-                <p className="flex items-start">
-                  <Phone className="w-4 h-4 mr-2 mt-1" />
-                  <span>
-                    (+1) 437-600-3669
                   </span>
                 </p>
                 <p className="flex items-start">
@@ -349,12 +342,6 @@ export default function Footer() {
                   <MapPin className="w-4 h-4 mr-2 mt-1" />
                   <span className="text-left">
                     401, 180 Duncan Mills Road <br /> Toronto, ON, M3B 1Z6
-                  </span>
-                </p>
-                <p className="flex items-start">
-                  <Phone className="w-4 h-4 mr-2 mt-1" />
-                  <span>
-                    (+1) 437-600-3669
                   </span>
                 </p>
                 <p className="flex items-start">

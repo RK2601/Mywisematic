@@ -42,7 +42,6 @@ function contactResponse(): ChatAgentResponse {
     response: `I'd be happy to connect you with our team!
 
 📧 Email: ${COMPANY.email}
-📞 Phone: ${COMPANY.phone}
 📍 Office: ${COMPANY.address}
 
 You can also fill out a quick form right here in the chat, visit our Contact Us page, or email us directly.`,
@@ -50,7 +49,6 @@ You can also fill out a quick form right here in the chat, visit our Contact Us 
       { label: "Fill out form", type: "show_form", value: "form" },
       { label: "Contact Us page", type: "link", value: COMPANY.contactPage },
       { label: `Email ${COMPANY.email}`, type: "email", value: COMPANY.email },
-      { label: `Call ${COMPANY.phone}`, type: "phone", value: COMPANY.phoneTel },
     ],
     suggestions: ["I'd like to submit a form", "What services do you offer?"],
   };
@@ -86,7 +84,7 @@ function greetingResponse(): ChatAgentResponse {
 • Information about our services (AI/ML, SaaS, AR/VR, and more)
 • Company details and office location
 • Connecting you with our team at ${COMPANY.email}
-• Submitting a contact form or sharing our phone number
+• Submitting a contact form
 
 How can I help you today?`,
     actions: [
@@ -138,7 +136,6 @@ export function getChatResponse(query: string): ChatAgentResponse {
       showContactForm: true,
       actions: [
         { label: `Email ${COMPANY.email}`, type: "email", value: COMPANY.email },
-        { label: `Call ${COMPANY.phone}`, type: "phone", value: COMPANY.phoneTel },
       ],
     };
   }
@@ -177,13 +174,11 @@ export function getChatResponse(query: string): ChatAgentResponse {
 
 The best way to get started:
 📧 Email ${COMPANY.email}
-📞 Call ${COMPANY.phone}
 📝 Fill out the form below or visit ${COMPANY.contactPage}`,
       showContactForm: true,
       actions: [
         { label: "Contact Us page", type: "link", value: COMPANY.contactPage },
         { label: `Email ${COMPANY.email}`, type: "email", value: COMPANY.email },
-        { label: `Call ${COMPANY.phone}`, type: "phone", value: COMPANY.phoneTel },
       ],
     };
   }
@@ -204,21 +199,19 @@ The best way to get started:
 
 📍 ${COMPANY.address}
 
-📞 ${COMPANY.phone}
 📧 ${COMPANY.email}
 
 Would you like to schedule a visit or send us a message?`,
       actions: [
         { label: "Contact Us", type: "link", value: COMPANY.contactPage },
         { label: "Fill out form", type: "show_form", value: "form" },
-        { label: `Call ${COMPANY.phone}`, type: "phone", value: COMPANY.phoneTel },
       ],
     };
   }
 
   if (includesAny(text, ["thank", "thanks", "appreciate"])) {
     return {
-      response: `You're welcome! If you need anything else, I'm here to help. You can always reach our team at ${COMPANY.email} or ${COMPANY.phone}.`,
+      response: `You're welcome! If you need anything else, I'm here to help. You can always reach our team at ${COMPANY.email}.`,
       actions: [
         { label: "Contact Us", type: "show_form", value: "form" },
         { label: "Our Services", type: "quick_reply", value: "What services do you offer?" },
@@ -228,7 +221,7 @@ Would you like to schedule a visit or send us a message?`,
 
   if (includesAny(text, ["bye", "goodbye", "see you"])) {
     return {
-      response: `Goodbye! Feel free to come back anytime. For urgent matters, contact us at ${COMPANY.email} or ${COMPANY.phone}. Have a great day!`,
+      response: `Goodbye! Feel free to come back anytime. For urgent matters, contact us at ${COMPANY.email}. Have a great day!`,
     };
   }
 
@@ -284,7 +277,7 @@ Learn more on our About Us page: ${COMPANY.aboutPage}`,
 
 Explore open positions on our Careers page: ${COMPANY.careersPage}
 
-For general inquiries, reach us at ${COMPANY.email} or ${COMPANY.phone}.`,
+For general inquiries, reach us at ${COMPANY.email}.`,
       actions: [
         { label: "View Careers", type: "link", value: COMPANY.careersPage },
         { label: "Contact Us", type: "show_form", value: "form" },
@@ -336,7 +329,7 @@ For general inquiries, reach us at ${COMPANY.email} or ${COMPANY.phone}.`,
   return {
     response: `I'm not sure I fully understood that, but I'm here to help! Here are some things I can assist with:
 
-• Our services (AI/ML, SaaS, Data Analytics, AR/VR, and more)
+• Our services (AI/ML, SaaS, AR/VR, and more)
 • Contact information and connecting you with our team
 • Office location and company details
 • Careers, blogs, and learning resources
