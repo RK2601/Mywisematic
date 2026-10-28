@@ -20,8 +20,12 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "WiseMatic",
-  description: "Wise and Stellar",
+  metadataBase: new URL("https://www.wisematic.ca"),
+  title: { default: "WiseMatic | AI, Software, AR/VR & Digital Growth", template: "%s | WiseMatic" },
+  description:
+    "WiseMatic is a Toronto technology company building AI/ML solutions, SaaS, AR/VR, games and digital marketing that help businesses grow.",
+  openGraph: { siteName: "WiseMatic", type: "website", locale: "en_CA" },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({

@@ -194,7 +194,7 @@ export default function ChatSupport() {
             <Maximize2 className="h-4 w-4" />
           )}
         </Button>
-        <h1 className="text-xl font-semibold">WiseMatic Assistant</h1>
+        <h2 className="text-xl font-semibold">WiseMatic Assistant</h2>
         <p>Ask about our services or get in touch with our team.</p>
         <div className="flex gap-2 items-center pt-2">
           <Button variant="secondary" onClick={handleNewChat} disabled={isLoading}>

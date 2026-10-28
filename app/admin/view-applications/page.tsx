@@ -33,14 +33,35 @@ type Application = {
 };
 
 const STATUSES: { value: Status; label: string; className: string }[] = [
-  { value: "new", label: "New", className: "bg-sky-500/15 text-sky-300 border-sky-500/30" },
-  { value: "reviewing", label: "Reviewing", className: "bg-amber-500/15 text-amber-300 border-amber-500/30" },
-  { value: "shortlisted", label: "Shortlisted", className: "bg-violet-500/15 text-violet-300 border-violet-500/30" },
-  { value: "rejected", label: "Rejected", className: "bg-red-500/15 text-red-300 border-red-500/30" },
-  { value: "hired", label: "Hired", className: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" },
+  {
+    value: "new",
+    label: "New",
+    className: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  },
+  {
+    value: "reviewing",
+    label: "Reviewing",
+    className: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  },
+  {
+    value: "shortlisted",
+    label: "Shortlisted",
+    className: "bg-violet-500/15 text-violet-300 border-violet-500/30",
+  },
+  {
+    value: "rejected",
+    label: "Rejected",
+    className: "bg-red-500/15 text-red-300 border-red-500/30",
+  },
+  {
+    value: "hired",
+    label: "Hired",
+    className: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  },
 ];
 
-const statusOf = (s?: Status) => STATUSES.find((x) => x.value === (s || "new"))!;
+const statusOf = (s?: Status) =>
+  STATUSES.find((x) => x.value === (s || "new"))!;
 
 function StatusSelect({
   value,
@@ -58,7 +79,11 @@ function StatusSelect({
       className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#399AD2]/40 ${current.className}`}
     >
       {STATUSES.map((s) => (
-        <option key={s.value} value={s.value} className="bg-zinc-900 text-zinc-100">
+        <option
+          key={s.value}
+          value={s.value}
+          className="bg-zinc-900 text-zinc-100"
+        >
           {s.label}
         </option>
       ))}
@@ -89,9 +114,14 @@ export default function ViewApplicationsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const update = async (id: string, patch: { status?: Status; notes?: string }) => {
+  const update = async (
+    id: string,
+    patch: { status?: Status; notes?: string },
+  ) => {
     const previous = items;
-    setItems((list) => list.map((i) => (i._id === id ? { ...i, ...patch } : i)));
+    setItems((list) =>
+      list.map((i) => (i._id === id ? { ...i, ...patch } : i)),
+    );
     try {
       await adminClientFetch(`applications/update?id=${id}`, {
         method: "PATCH",
@@ -106,7 +136,8 @@ export default function ViewApplicationsPage() {
   };
 
   const handleStatus = async (id: string, status: Status) => {
-    if (await update(id, { status })) toast.success(`Marked as ${statusOf(status).label}`);
+    if (await update(id, { status }))
+      toast.success(`Marked as ${statusOf(status).label}`);
   };
 
   const openDetails = (item: Application) => {
@@ -124,7 +155,9 @@ export default function ViewApplicationsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this application?")) return;
     try {
-      await adminClientFetch(`applications/delete?id=${id}`, { method: "DELETE" });
+      await adminClientFetch(`applications/delete?id=${id}`, {
+        method: "DELETE",
+      });
       toast.success("Application deleted");
       setOpenId(null);
       await loadItems();
@@ -136,12 +169,22 @@ export default function ViewApplicationsPage() {
   if (loading) return <AdminLoadingScreen />;
 
   const counts = Object.fromEntries(
-    STATUSES.map((s) => [s.value, items.filter((i) => (i.status || "new") === s.value).length]),
+    STATUSES.map((s) => [
+      s.value,
+      items.filter((i) => (i.status || "new") === s.value).length,
+    ]),
   );
-  const visible = filter === "all" ? items : items.filter((i) => (i.status || "new") === filter);
+  const visible =
+    filter === "all"
+      ? items
+      : items.filter((i) => (i.status || "new") === filter);
   const tabs = [
     { value: "all" as const, label: "All", count: items.length },
-    ...STATUSES.map((s) => ({ value: s.value, label: s.label, count: counts[s.value] })),
+    ...STATUSES.map((s) => ({
+      value: s.value,
+      label: s.label,
+      count: counts[s.value],
+    })),
   ];
 
   return (
@@ -151,7 +194,11 @@ export default function ViewApplicationsPage() {
         description="Review job applications submitted through the careers page."
       />
 
-      <div className="mb-4 flex flex-wrap gap-2" role="tablist" aria-label="Filter by status">
+      <div
+        className="mb-4 flex flex-wrap gap-2"
+        role="tablist"
+        aria-label="Filter by status"
+      >
         {tabs.map((t) => (
           <button
             key={t.value}
@@ -185,16 +232,29 @@ export default function ViewApplicationsPage() {
             </div>
           ),
           job: item.jobName,
-          date: item.appliedAt ? new Date(item.appliedAt).toLocaleDateString() : "-",
+          date: item.appliedAt
+            ? new Date(item.appliedAt).toLocaleDateString()
+            : "-",
           status: (
-            <StatusSelect value={item.status} onChange={(s) => handleStatus(item._id, s)} />
+            <StatusSelect
+              value={item.status}
+              onChange={(s) => handleStatus(item._id, s)}
+            />
           ),
           actions: (
             <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={() => openDetails(item)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => openDetails(item)}
+              >
                 View details
               </Button>
-              <Button size="sm" variant="destructive" onClick={() => handleDelete(item._id)}>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => handleDelete(item._id)}
+              >
                 Delete
               </Button>
             </div>
@@ -210,19 +270,27 @@ export default function ViewApplicationsPage() {
                 <SheetTitle>{open.fullName}</SheetTitle>
                 <SheetDescription>
                   {open.jobName}
-                  {open.appliedAt ? ` · applied ${new Date(open.appliedAt).toLocaleString()}` : ""}
+                  {open.appliedAt
+                    ? ` · applied ${new Date(open.appliedAt).toLocaleString()}`
+                    : ""}
                 </SheetDescription>
               </SheetHeader>
 
               <div className="mt-6 space-y-5 text-sm">
                 <div>
                   <p className="mb-2 text-muted-foreground">Status</p>
-                  <StatusSelect value={open.status} onChange={(s) => handleStatus(open._id, s)} />
+                  <StatusSelect
+                    value={open.status}
+                    onChange={(s) => handleStatus(open._id, s)}
+                  />
                 </div>
                 <dl className="grid grid-cols-[100px_1fr] gap-y-3">
                   <dt className="text-muted-foreground">Email</dt>
                   <dd>
-                    <a href={`mailto:${open.email}`} className="break-all text-[#399AD2] hover:underline">
+                    <a
+                      href={`mailto:${open.email}`}
+                      className="break-all text-[#399AD2] hover:underline"
+                    >
                       {open.email}
                     </a>
                   </dd>
@@ -230,15 +298,24 @@ export default function ViewApplicationsPage() {
                   <dd>{open.phone || "-"}</dd>
                   <dt className="text-muted-foreground">Resume</dt>
                   <dd>
-                    <ApplicationDocumentLink value={open.cvResume} fallbackLabel="Resume" />
+                    <ApplicationDocumentLink
+                      value={open.cvResume}
+                      fallbackLabel="Resume"
+                    />
                   </dd>
                   <dt className="text-muted-foreground">Cover letter</dt>
                   <dd>
-                    <ApplicationDocumentLink value={open.coverLetter} fallbackLabel="Cover Letter" />
+                    <ApplicationDocumentLink
+                      value={open.coverLetter}
+                      fallbackLabel="Cover Letter"
+                    />
                   </dd>
                 </dl>
                 <div>
-                  <label htmlFor="app-notes" className="mb-2 block text-muted-foreground">
+                  <label
+                    htmlFor="app-notes"
+                    className="mb-2 block text-muted-foreground"
+                  >
                     Private notes
                   </label>
                   <Textarea

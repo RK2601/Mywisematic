@@ -1,167 +1,271 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { Clock } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
-import React from "react";
-import { baseURL } from "@/lib/utils";
-import { ClipLoader } from "react-spinners"; // Import ClipLoader
+import Link from "next/link";
+import { ArrowRight, CalendarDays, ChevronRight, Clock, Sparkles } from "lucide-react";
+import { notFound } from "next/navigation";
+import { SITE_URL, allPostsForChecks, getPublishedPost, publishedPosts, readingMinutes } from "@/lib/blog";
+import { unsplash } from "@/lib/blog/types";
+import { plain, slugify } from "@/lib/blog/inline";
+import { PostBody, Rich } from "@/app/blogs/_components/post-body";
+import LegacyPost from "@/app/blogs/_components/legacy-post";
 
-interface BlogContent {
-  _id: string;
-  title: string;
-  content: { type: string; content: string }[];
-  thumbnail: string;
-  type: string;
-  creationDate: string;
+// Posts publish on their date; re-check at most every 10 minutes.
+export const revalidate = 600;
+
+type Props = { params: { blogId: string } };
+
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric", timeZone: "America/Toronto" });
+
+export function generateMetadata({ params }: Props): Metadata {
+  const post = getPublishedPost(params.blogId);
+  if (!post) return { title: "Blog" };
+  const url = `${SITE_URL}/blogs/${post.slug}`;
+  const image = unsplash(post.hero.src, 1200);
+  return {
+    title: post.title,
+    description: post.description,
+    keywords: post.keywords,
+    alternates: { canonical: url },
+    authors: [{ name: "WiseMatic Editorial Team" }],
+    openGraph: {
+      type: "article",
+      url,
+      title: post.title,
+      description: post.description,
+      siteName: "WiseMatic",
+      publishedTime: post.publishAt,
+      section: post.category,
+      tags: post.keywords,
+      images: [{ url: image, width: 1200, alt: post.hero.alt }],
+    },
+    twitter: { card: "summary_large_image", title: post.title, description: post.description, images: [image] },
+  };
 }
 
-export default function BlogsPage() {
-  const params = useParams();
-  const blogId = params.blogId; // Ensure blogId is correctly retrieved
-  const [blog, setBlog] = useState<BlogContent | null>(null);
-  const [loading, setLoading] = useState(true); // Track loading state
-  const [, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchBlogPost = async () => {
-      try {
-        const response = await fetch(`${baseURL}/api/blogs/get`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch blogs");
-        }
-
-        const data = await response.json();
-        if (data.success && data.blogs) {
-          // Find the blog with the matching blogId
-          const foundBlog = data.blogs.find(
-            (blog: BlogContent) => blog._id === blogId,
-          );
-
-          if (foundBlog) {
-            setBlog(foundBlog); // Set the blog post data
-          } else {
-            throw new Error("Blog post not found.");
-          }
-        } else {
-          throw new Error(data.error || "Failed to fetch blogs");
-        }
-      } catch (error) {
-        console.error("Error fetching blog post:", error);
-        setError("Failed to load the blog post. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBlogPost();
-  }, [blogId]);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <ClipLoader size={50} color={"#123abc"} loading={true} />
-      </div>
-    );
+export default function BlogPostPage({ params }: Props) {
+  const post = getPublishedPost(params.blogId);
+  // Not one of the scheduled posts: fall back to posts created in the admin panel (MongoDB ids).
+  if (!post) {
+    // A scheduled post before its date stays hidden.
+    if (allPostsForChecks().some((p) => p.slug === params.blogId)) notFound();
+    return <LegacyPost />;
   }
 
-  if (!blog) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-400">Blog post not found.</p>
-      </div>
-    );
-  }
+  const url = `${SITE_URL}/blogs/${post.slug}`;
+  const minutes = readingMinutes(post);
+  const toc = post.body.filter((b) => b.t === "h2").map((b) => ("text" in b ? b.text : ""));
+  const related = publishedPosts()
+    .filter((p) => p.slug !== post.slug)
+    .sort((a, b) => Number(b.category === post.category) - Number(a.category === post.category))
+    .slice(0, 3);
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.description,
+      image: unsplash(post.hero.src, 1200),
+      datePublished: post.publishAt,
+      dateModified: post.publishAt,
+      author: { "@type": "Organization", name: "WiseMatic", url: SITE_URL },
+      publisher: {
+        "@type": "Organization",
+        name: "WiseMatic",
+        url: SITE_URL,
+        logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon.ico` },
+      },
+      mainEntityOfPage: url,
+      keywords: post.keywords.join(", "),
+      articleSection: post.category,
+      citation: post.references.map((r) => r.url),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blogs` },
+        { "@type": "ListItem", position: 3, name: post.title, item: url },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: post.faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: plain(f.a) },
+      })),
+    },
+  ];
 
   return (
-    <article className="min-h-screen">
-      <div className="max-w-7xl mx-auto py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <div className="mb-8 sm:mb-16">
-          <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-3xl overflow-hidden shadow-2xl ring-1 ring-black/5">
-            {blog.thumbnail ? (
-              <Image
-                src={blog.thumbnail}
-                alt={blog.title}
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-105"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-                <span className="text-gray-500 text-2xl">
-                  No Image Available
-                </span>
+    <main className="relative overflow-x-clip pb-24">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-[#399AD2]/10 blur-3xl" />
+
+      <article className="relative mx-auto max-w-6xl px-4 pt-28 sm:px-6">
+        <nav aria-label="Breadcrumb" className="mx-auto mb-8 max-w-3xl text-sm text-muted-foreground">
+          <ol className="flex flex-wrap items-center gap-1">
+            <li><Link href="/" className="hover:text-foreground">Home</Link></li>
+            <ChevronRight className="h-4 w-4" aria-hidden />
+            <li><Link href="/blogs" className="hover:text-foreground">Blog</Link></li>
+            <ChevronRight className="h-4 w-4" aria-hidden />
+            <li className="text-zinc-400">{post.category}</li>
+          </ol>
+        </nav>
+
+        <header className="mx-auto max-w-3xl">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#399AD2]/30 bg-[#399AD2]/10 px-3 py-1 text-sm text-[#7cc0e8]">
+            {post.category}
+          </span>
+          <h1 className="mt-5 bg-gradient-to-r from-foreground to-zinc-400 bg-clip-text text-4xl font-semibold leading-tight text-transparent sm:text-5xl sm:leading-[1.1]">
+            {post.title}
+          </h1>
+          <p className="mt-5 text-lg leading-8 text-muted-foreground">{post.description}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+            <span className="font-medium text-zinc-300">By the WiseMatic Editorial Team</span>
+            <span className="inline-flex items-center gap-1.5">
+              <CalendarDays className="h-4 w-4" aria-hidden />
+              <time dateTime={post.publishAt}>{fmt(post.publishAt)}</time>
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Clock className="h-4 w-4" aria-hidden />
+              {minutes} min read
+            </span>
+          </div>
+        </header>
+
+        <figure className="mx-auto mt-10 max-w-5xl">
+          <div className="relative aspect-[21/9] overflow-hidden rounded-3xl border border-white/10 shadow-[0_0_80px_-30px_rgba(57,154,210,0.6)]">
+            <Image
+              src={unsplash(post.hero.src, 2000)}
+              alt={post.hero.alt}
+              fill
+              priority
+              sizes="(min-width: 1024px) 1024px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </figure>
+
+        <div className="mx-auto mt-12 grid max-w-6xl gap-12 lg:grid-cols-[1fr_minmax(0,720px)_1fr]">
+          <aside className="hidden lg:block" aria-label="On this page">
+            <div className="sticky top-28 text-sm">
+              <p className="mb-3 font-semibold text-zinc-300">On this page</p>
+              <ul className="space-y-2 border-l border-white/10">
+                {toc.map((t) => (
+                  <li key={t}>
+                    <a href={`#${slugify(t)}`} className="-ml-px block border-l border-transparent pl-4 text-muted-foreground hover:border-[#399AD2] hover:text-foreground">
+                      {t}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+
+          <div className="min-w-0">
+            <section className="mb-10 rounded-3xl bg-gradient-to-br from-[#399AD2]/40 via-white/10 to-purple-500/30 p-px">
+              <div className="rounded-3xl bg-background/90 p-6 sm:p-8">
+                <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-[#399AD2]">
+                  <Sparkles className="h-4 w-4" aria-hidden /> Key takeaways
+                </p>
+                <ul className="mt-4 space-y-3 text-[16px] leading-7 text-zinc-300">
+                  {post.takeaways.map((t) => (
+                    <li key={t} className="flex gap-3">
+                      <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#399AD2]" />
+                      <span><Rich text={t} /></span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 text-white">
-              <div className="flex items-center gap-3 sm:gap-6 mb-4 sm:mb-6">
-                {/* <Avatar className="h-12 w-12 sm:h-16 sm:w-16 ring-2 ring-white">
-                  <AvatarImage
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                    alt="Author avatar"
-                  />
-                </Avatar> */}
-                <div>
-                  {/* <p className="font-semibold text-base sm:text-xl">John Doe</p> */}
-                  <div className="flex items-center gap-2 text-xs sm:text-sm mt-1">
-                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span>
-                      {new Date(blog.creationDate).toLocaleDateString()}
-                    </span>
-                  </div>
+            </section>
+
+            <PostBody blocks={post.body} />
+
+            <section className="mt-16" aria-labelledby="faq">
+              <h2 id="faq" className="text-2xl font-semibold text-foreground sm:text-3xl">Frequently asked questions</h2>
+              <div className="mt-6 divide-y divide-white/10 rounded-2xl border border-white/10">
+                {post.faq.map((f) => (
+                  <details key={f.q} className="group p-5 [&_summary::-webkit-details-marker]:hidden">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground">
+                      {f.q}
+                      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-90" aria-hidden />
+                    </summary>
+                    <p className="mt-3 leading-7 text-zinc-400"><Rich text={f.a} /></p>
+                  </details>
+                ))}
+              </div>
+            </section>
+
+            <section className="mt-14" aria-labelledby="references">
+              <h2 id="references" className="text-xl font-semibold text-foreground">Sources and further reading</h2>
+              <ol className="mt-4 list-decimal space-y-2 pl-6 text-[15px] leading-7 text-zinc-400 marker:text-zinc-500">
+                {post.references.map((r) => (
+                  <li key={r.url}>
+                    <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-zinc-300 underline-offset-4 hover:text-[#399AD2] hover:underline">
+                      {r.title}
+                    </a>{" "}
+                    <span>— {r.publisher}</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section className="mt-14 overflow-hidden rounded-3xl bg-gradient-to-br from-[#399AD2]/50 via-white/10 to-purple-500/40 p-px">
+              <div className="relative rounded-3xl bg-background/90 p-8 sm:p-10">
+                <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-purple-500/20 blur-3xl" />
+                <p className="text-sm font-semibold uppercase tracking-widest text-[#399AD2]">Work with WiseMatic</p>
+                <h2 className="mt-2 text-2xl font-semibold text-foreground sm:text-3xl">
+                  Want help putting this into practice?
+                </h2>
+                <p className="mt-3 max-w-xl text-muted-foreground">
+                  Our {post.service.label} team turns ideas like these into working solutions. Tell us what you&#39;re
+                  planning and we&#39;ll suggest a practical first step.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    href="/contact-us"
+                    className="group inline-flex h-11 items-center rounded-xl bg-gradient-to-r from-[#399AD2] to-purple-500 px-5 font-medium text-white shadow-lg shadow-[#399AD2]/20 hover:opacity-90"
+                  >
+                    Talk to our team
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+                  </Link>
+                  <Link
+                    href={post.service.href}
+                    className="inline-flex h-11 items-center rounded-xl border border-white/15 px-5 font-medium text-zinc-200 hover:border-white/30"
+                  >
+                    Explore {post.service.label}
+                  </Link>
                 </div>
               </div>
-              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight sm:leading-tight mb-4 sm:mb-6">
-                {blog.title}
-              </h1>
-            </div>
+            </section>
           </div>
+          <div className="hidden lg:block" />
         </div>
+      </article>
 
-        {/* Main Content */}
-        <div className="prose prose-lg sm:prose-xl max-w-none">
-          <div className="rounded-xl p-6 sm:p-8 shadow-lg ring-1 ring-black/5">
-            <div className="space-y-6 text-muted-foreground">
-              {blog.content?.map((section, index) => (
-                <div key={index}>
-                  {section.type === "subheading" ? (
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-100 mt-8 mb-4">
-                      {section.content}
-                    </h2>
-                  ) : (
-                    <p className="text-lg">{section.content}</p>
-                  )}
+      {related.length > 0 && (
+        <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6" aria-labelledby="related">
+          <h2 id="related" className="text-2xl font-semibold text-foreground">Keep reading</h2>
+          <div className="mt-6 grid gap-6 md:grid-cols-3">
+            {related.map((r) => (
+              <Link key={r.slug} href={`/blogs/${r.slug}`} className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition-colors hover:border-[#399AD2]/40">
+                <div className="relative aspect-[16/9] overflow-hidden">
+                  <Image src={unsplash(r.hero.src, 800)} alt={r.hero.alt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
-              ))}
-            </div>
+                <div className="p-5">
+                  <p className="text-xs font-medium uppercase tracking-wider text-[#399AD2]">{r.category}</p>
+                  <p className="mt-2 font-semibold leading-snug text-foreground">{r.title}</p>
+                </div>
+              </Link>
+            ))}
           </div>
-        </div>
-
-        {/* Footer Section */}
-        {/* <div className=" space-y-8 sm:space-y-10 mt-12 sm:mt-16">
-          <div>
-            <h3 className="text-xl sm:text-2xl font-semibold text-gray-100 mb-4 sm:mb-6">
-              Tags
-            </h3>
-            <div className="flex flex-wrap gap-3">
-              <Badge
-                variant="secondary"
-                className="px-4 py-2 text-sm font-medium hover:bg-gray-200 transition-colors cursor-pointer"
-              >
-                {blog.type}
-              </Badge>
-            </div>
-          </div>
-        </div> */}
-      </div>
-    </article>
+        </section>
+      )}
+    </main>
   );
 }

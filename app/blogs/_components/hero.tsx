@@ -9,6 +9,7 @@ import { SearchIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { baseURL } from "@/lib/utils";
 import { ClipLoader } from "react-spinners";
+import { PostCards, type PostCard } from "./post-cards";
 
 export interface ContentSection {
   type: "subheading" | "text";
@@ -24,7 +25,7 @@ export interface BlogPost {
   creationDate: string;
 }
 
-export default function BlogsPageHero() {
+export default function BlogsPageHero({ posts = [] }: { posts?: PostCard[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [filteredBlogsPosts, setfilteredBlogsPosts] = useState<BlogPost[]>([]);
@@ -116,7 +117,7 @@ export default function BlogsPageHero() {
           </h1>
 
           <p className="text-md relative z-10 max-w-[550px] animate-appear font-medium text-muted-foreground opacity-0 delay-100 sm:text-xl">
-            Explore our latest thoughts on technology, design, and business.
+            Practical, well-researched guides on AI, software, AR/VR, games and digital growth, written to help you make better technology decisions.
           </p>
         </div>
       </div>
@@ -135,15 +136,26 @@ export default function BlogsPageHero() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        {loading ? (
-          <div className="flex justify-center items-center">
-            <ClipLoader size={50} color={"#123abc"} loading={true} />
-          </div>
-        ) : filteredBlogsPosts.length > 0 ? (
-          <BlogGrid posts={filteredBlogsPosts} />
-        ) : (
-          <p className="text-center text-gray-400">No blogs found.</p>
-        )}
+        {(() => {
+          const q = searchTerm.trim().toLowerCase();
+          const shown = q
+            ? posts.filter((p) => `${p.title} ${p.description} ${p.category}`.toLowerCase().includes(q))
+            : posts;
+          return (
+            <>
+              {shown.length > 0 && <PostCards posts={shown} featured={!q} />}
+              {loading ? (
+                <div className="flex justify-center items-center">
+                  <ClipLoader size={50} color={"#399AD2"} loading={true} />
+                </div>
+              ) : filteredBlogsPosts.length > 0 ? (
+                <BlogGrid posts={filteredBlogsPosts} />
+              ) : shown.length === 0 ? (
+                <p className="text-center text-gray-400">No articles found.</p>
+              ) : null}
+            </>
+          );
+        })()}
       </div>
     </Section>
   );
