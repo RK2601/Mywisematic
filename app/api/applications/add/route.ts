@@ -81,7 +81,7 @@ export async function POST(request: Request) {
         Name: fullName,
         Email: email,
         Phone: phone,
-        "Cover letter": coverLetter.startsWith("http") ? "" : coverLetter,
+        "Cover letter": coverLetterField instanceof File ? "(uploaded file)" : coverLetter,
         Files: "Open the admin panel → View Applications to download",
       },
       email,

@@ -9,6 +9,12 @@ const ApplicationSchema = new Schema(
     appliedAt: { type: Date, default: Date.now },
     coverLetter: { type: String, default: "" },
     cvResume: { type: String, default: "" },
+    status: {
+      type: String,
+      enum: ["new", "reviewing", "shortlisted", "rejected", "hired"],
+      default: "new",
+    },
+    notes: { type: String, default: "" },
   },
   { timestamps: true },
 );
