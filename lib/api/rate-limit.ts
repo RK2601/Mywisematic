@@ -18,14 +18,21 @@ export function clientIp(request: Request): string {
 }
 
 /** Counts one hit for `key`; returns true when the caller is over `limit` within `windowSec`. Call after connectDB(). */
-export async function isRateLimited(key: string, limit: number, windowSec: number): Promise<boolean> {
+export async function isRateLimited(
+  key: string,
+  limit: number,
+  windowSec: number,
+): Promise<boolean> {
   const now = new Date();
   // Drop an expired window first (the TTL monitor only runs about once a minute).
   await RateLimit.deleteOne({ key, expiresAt: { $lte: now } });
   const doc = await RateLimit.findOneAndUpdate(
     { key },
-    { $inc: { count: 1 }, $setOnInsert: { expiresAt: new Date(now.getTime() + windowSec * 1000) } },
-    { upsert: true, new: true },
+    {
+      $inc: { count: 1 },
+      $setOnInsert: { expiresAt: new Date(now.getTime() + windowSec * 1000) },
+    },
+    { upsert: true, returnDocument: "after" },
   );
   return doc.count > limit;
 }
@@ -35,8 +42,17 @@ export async function clearRateLimit(key: string): Promise<void> {
 }
 
 export function tooManyRequests(retryAfterSec: number) {
-  return new Response(JSON.stringify({ success: false, error: "Too many attempts. Please try again later." }), {
-    status: 429,
-    headers: { "Content-Type": "application/json", "Retry-After": String(retryAfterSec) },
-  });
+  return new Response(
+    JSON.stringify({
+      success: false,
+      error: "Too many attempts. Please try again later.",
+    }),
+    {
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        "Retry-After": String(retryAfterSec),
+      },
+    },
+  );
 }

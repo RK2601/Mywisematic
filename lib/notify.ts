@@ -13,7 +13,10 @@ export async function notifyOwner(
 ): Promise<void> {
   const key = process.env.RESEND_API_KEY;
   const to = process.env.NOTIFY_EMAIL;
-  if (!key || !to) return;
+  if (!key || !to) {
+    console.warn("notifyOwner skipped: RESEND_API_KEY or NOTIFY_EMAIL is not set");
+    return;
+  }
 
   const rows = Object.entries(fields)
     .filter(([, v]) => v)
@@ -36,6 +39,7 @@ export async function notifyOwner(
       }),
     });
     if (!res.ok) console.error("notifyOwner failed:", res.status, await res.text());
+    else console.log("notifyOwner sent:", (await res.json().catch(() => ({}))).id);
   } catch (error) {
     // Never let a failed email lose the submission itself.
     console.error("notifyOwner error:", error);
