@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { allPostsForChecks, isPublished } from "@/lib/blog";
 
 type Blog = {
   _id: string;
@@ -216,7 +217,58 @@ export default function BlogsAdminPage() {
             </div>
           ),
         }))}
+        emptyMessage="No posts created here yet."
       />
+
+      {/* Scheduled articles live in code (lib/blog/posts) and publish on their date; read-only here. */}
+      <div className="mt-12">
+        <h2 className="text-xl font-semibold text-white">Scheduled articles</h2>
+        <p className="mb-4 mt-1 text-sm text-zinc-400">
+          Written in the website code; each one goes live automatically at 9 AM Toronto time on its date.
+        </p>
+        <AdminDataTable
+          columns={[
+            { key: "title", label: "Title" },
+            { key: "category", label: "Category" },
+            { key: "date", label: "Publish date" },
+            { key: "status", label: "Status" },
+            { key: "actions", label: "Actions", className: "w-28" },
+          ]}
+          rows={[...allPostsForChecks()].reverse().map((post) => {
+            const live = isPublished(post);
+            return {
+              title: post.title,
+              category: post.category,
+              date: new Date(post.publishAt).toLocaleDateString("en-CA", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                timeZone: "America/Toronto",
+              }),
+              status: (
+                <span
+                  className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${
+                    live
+                      ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-300"
+                      : "border-amber-500/30 bg-amber-500/15 text-amber-300"
+                  }`}
+                >
+                  {live ? "Published" : "Scheduled"}
+                </span>
+              ),
+              actions: live ? (
+                <Button size="sm" variant="outline" asChild>
+                  <Link href={`/blogs/${post.slug}`} target="_blank">
+                    View
+                  </Link>
+                </Button>
+              ) : (
+                <span className="text-xs text-zinc-500">Not live yet</span>
+              ),
+            };
+          })}
+        />
+      </div>
     </div>
   );
 }
