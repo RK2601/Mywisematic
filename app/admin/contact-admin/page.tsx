@@ -7,6 +7,13 @@ import { AdminDataTable } from "@/components/admin/data-table";
 import { AdminLoadingScreen } from "@/components/admin/loading-screen";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 type Contact = {
   _id: string;
@@ -20,6 +27,7 @@ type Contact = {
 export default function ContactAdminPage() {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<Contact[]>([]);
+  const [open, setOpen] = useState<Contact | null>(null);
 
   const loadItems = async () => {
     const data = await adminClientFetch<{ contacts: Contact[] }>("contactus/get");
@@ -65,7 +73,17 @@ export default function ContactAdminPage() {
           name: item.name,
           email: item.email,
           phone: item.phone,
-          message: <span className="line-clamp-2 max-w-md">{item.message}</span>,
+          message: (
+            <button
+              type="button"
+              onClick={() => setOpen(item)}
+              className="max-w-md text-left hover:text-foreground"
+              title="Read full message"
+            >
+              <span className="line-clamp-2">{item.message}</span>
+              <span className="mt-1 block text-xs text-[#399AD2]">Read full message</span>
+            </button>
+          ),
           date: item.contactedAt
             ? new Date(item.contactedAt).toLocaleDateString()
             : "-",
@@ -80,6 +98,50 @@ export default function ContactAdminPage() {
           ),
         }))}
       />
+
+      <Sheet open={!!open} onOpenChange={(v) => !v && setOpen(null)}>
+        <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
+          {open && (
+            <>
+              <SheetHeader>
+                <SheetTitle>{open.name}</SheetTitle>
+                <SheetDescription>
+                  {open.contactedAt
+                    ? new Date(open.contactedAt).toLocaleString()
+                    : ""}
+                </SheetDescription>
+              </SheetHeader>
+              <dl className="mt-6 space-y-4 text-sm">
+                <div>
+                  <dt className="text-muted-foreground">Email</dt>
+                  <dd>
+                    <a href={`mailto:${open.email}`} className="text-[#399AD2] hover:underline">
+                      {open.email}
+                    </a>
+                  </dd>
+                </div>
+                {open.phone && (
+                  <div>
+                    <dt className="text-muted-foreground">Phone</dt>
+                    <dd>{open.phone}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt className="text-muted-foreground">Message</dt>
+                  <dd className="mt-1 whitespace-pre-wrap break-words rounded-xl border border-white/10 bg-white/[0.03] p-4 leading-relaxed">
+                    {open.message}
+                  </dd>
+                </div>
+              </dl>
+              <Button asChild className="mt-6 w-full">
+                <a href={`mailto:${open.email}?subject=${encodeURIComponent("Re: your message to WiseMatic")}`}>
+                  Reply by email
+                </a>
+              </Button>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
