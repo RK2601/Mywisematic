@@ -1,4 +1,16 @@
-import { Post, h2, p, ul, ol, tip, warn, checklist, table, img, quote } from "../types";
+import {
+  Post,
+  h2,
+  p,
+  ul,
+  ol,
+  tip,
+  warn,
+  checklist,
+  table,
+  img,
+  quote,
+} from "../types";
 
 const localSeo: Post = {
   slug: "local-seo-toronto-google-business-profile",
@@ -14,8 +26,14 @@ const localSeo: Post = {
     "local search marketing",
     "near me searches",
   ],
-  hero: { src: "1507992781348-310259076fe0", alt: "Toronto skyline with the CN Tower at sunset over Lake Ontario" },
-  service: { label: "Digital Marketing & SEO", href: "/services/digital-marketing" },
+  hero: {
+    src: "1507992781348-310259076fe0",
+    alt: "Toronto skyline with the CN Tower at sunset over Lake Ontario",
+  },
+  service: {
+    label: "Digital Marketing & SEO",
+    href: "/services/digital-marketing",
+  },
   takeaways: [
     "Google ranks local results on three factors: relevance, distance and prominence.",
     "A complete, accurate and active Google Business Profile is the foundation of local visibility.",
@@ -24,7 +42,7 @@ const localSeo: Post = {
   ],
   body: [
     p(
-      "When someone searches \"IT consultant near me\" or \"web developer Toronto,\" Google shows a map with a handful of businesses before any regular results. For local service businesses, that map pack can be the most valuable real estate on the internet. Here's how it works and how to earn your place.",
+      'When someone searches "IT consultant near me" or "web developer Toronto," Google shows a map with a handful of businesses before any regular results. For local service businesses, that map pack can be the most valuable real estate on the internet. Here\'s how it works and how to earn your place.',
     ),
     h2("How Google ranks local results"),
     p(
@@ -32,9 +50,21 @@ const localSeo: Post = {
     ),
     table(
       ["Factor", "What it means", "What you can influence"],
-      ["Relevance", "How well your profile matches the search", "Categories, services, description and website content"],
-      ["Distance", "How far you are from the searcher or the location in the query", "Accurate address and service areas"],
-      ["Prominence", "How well known your business is", "Reviews, links, mentions and overall web presence"],
+      [
+        "Relevance",
+        "How well your profile matches the search",
+        "Categories, services, description and website content",
+      ],
+      [
+        "Distance",
+        "How far you are from the searcher or the location in the query",
+        "Accurate address and service areas",
+      ],
+      [
+        "Prominence",
+        "How well known your business is",
+        "Reviews, links, mentions and overall web presence",
+      ],
     ),
     tip(
       "No pay-to-play",
@@ -111,7 +141,11 @@ const localSeo: Post = {
     },
   ],
   references: [
-    { title: "Tips to improve your local ranking on Google", publisher: "Google Business Profile Help", url: "https://support.google.com/business/answer/7091" },
+    {
+      title: "Tips to improve your local ranking on Google",
+      publisher: "Google Business Profile Help",
+      url: "https://support.google.com/business/answer/7091",
+    },
     {
       title: "Guidelines for representing your business on Google",
       publisher: "Google Business Profile Help",
@@ -139,7 +173,10 @@ const mvpPmf: Post = {
     "MVP development",
     "startup metrics retention",
   ],
-  hero: { src: "1600880292203-757bb62b4baf", alt: "Two colleagues celebrating with a high five in a bright office" },
+  hero: {
+    src: "1600880292203-757bb62b4baf",
+    alt: "Two colleagues celebrating with a high five in a bright office",
+  },
   service: { label: "SaaS Development", href: "/services/saas" },
   takeaways: [
     "An MVP is the smallest product that tests your riskiest assumption with real users. It's a learning tool, not a cheap version 1.0.",
@@ -157,9 +194,18 @@ const mvpPmf: Post = {
     ),
     table(
       ["MVP myth", "Reality"],
-      ["\"It's a cheap version of the full product.\"", "It's a focused experiment around one core problem."],
-      ["\"It can be buggy and ugly.\"", "It can be small, but the core experience must work and feel trustworthy."],
-      ["\"Launch it and see what happens.\"", "Define what you're testing and what result would change your plans."],
+      [
+        '"It\'s a cheap version of the full product."',
+        "It's a focused experiment around one core problem.",
+      ],
+      [
+        '"It can be buggy and ugly."',
+        "It can be small, but the core experience must work and feel trustworthy.",
+      ],
+      [
+        '"Launch it and see what happens."',
+        "Define what you're testing and what result would change your plans.",
+      ],
     ),
     h2("Do things that don't scale"),
     p(
@@ -171,7 +217,7 @@ const mvpPmf: Post = {
     ),
     h2("What product-market fit looks like"),
     p(
-      "Marc Andreessen famously described product-market fit as [\"being in a good market with a product that can satisfy that market\"](https://pmarchive.com/guide_to_startups_part4.html), and noted that you can always feel when it's happening: customers buy as fast as you can deliver, and usage grows on its own.",
+      'Marc Andreessen famously described product-market fit as ["being in a good market with a product that can satisfy that market"](https://pmarchive.com/guide_to_startups_part4.html), and noted that you can always feel when it\'s happening: customers buy as fast as you can deliver, and usage grows on its own.',
     ),
     ul(
       "**Retention flattens:** a meaningful share of each user cohort keeps using the product month after month.",
@@ -187,10 +233,22 @@ const mvpPmf: Post = {
     h2("The metrics that matter early"),
     table(
       ["Metric", "Question it answers"],
-      ["Activation rate", "Do new users reach the moment where they get real value?"],
-      ["Retention cohorts", "Do users keep coming back weeks and months later?"],
-      ["Engagement depth", "Do users rely on the core feature, or just poke around?"],
-      ["Referral / word of mouth", "Are users bringing others without being asked?"],
+      [
+        "Activation rate",
+        "Do new users reach the moment where they get real value?",
+      ],
+      [
+        "Retention cohorts",
+        "Do users keep coming back weeks and months later?",
+      ],
+      [
+        "Engagement depth",
+        "Do users rely on the core feature, or just poke around?",
+      ],
+      [
+        "Referral / word of mouth",
+        "Are users bringing others without being asked?",
+      ],
       ["Revenue retention (B2B)", "Do paying customers stay and expand?"],
     ),
     warn(
@@ -199,7 +257,7 @@ const mvpPmf: Post = {
     ),
     h2("Building the MVP the right way"),
     ol(
-      "**Define the riskiest assumption** (\"Will busy clinic managers pay to automate reminders?\").",
+      '**Define the riskiest assumption** ("Will busy clinic managers pay to automate reminders?").',
       "**Scope ruthlessly**: one user type, one core job, one great workflow.",
       "**Build on solid foundations**: authentication, security and data handling done properly, because trust is part of the product.",
       "**Instrument from day one**: track activation and retention events before launch.",
@@ -237,19 +295,29 @@ const mvpPmf: Post = {
     },
   ],
   references: [
-    { title: "Do Things that Don't Scale", publisher: "Paul Graham", url: "https://paulgraham.com/ds.html" },
     {
-      title: "The Pmarca Guide to Startups, part 4: The only thing that matters",
+      title: "Do Things that Don't Scale",
+      publisher: "Paul Graham",
+      url: "https://paulgraham.com/ds.html",
+    },
+    {
+      title:
+        "The Pmarca Guide to Startups, part 4: The only thing that matters",
       publisher: "Marc Andreessen",
       url: "https://pmarchive.com/guide_to_startups_part4.html",
     },
-    { title: "YC's Essential Startup Advice", publisher: "Y Combinator", url: "https://www.ycombinator.com/library/4D-yc-s-essential-startup-advice" },
+    {
+      title: "YC's Essential Startup Advice",
+      publisher: "Y Combinator",
+      url: "https://www.ycombinator.com/library/4D-yc-s-essential-startup-advice",
+    },
   ],
 };
 
 const finops: Post = {
   slug: "cloud-cost-optimization-finops",
-  title: "Cloud Cost Optimisation: How to Stop Overpaying for Your Infrastructure",
+  title:
+    "Cloud Cost Optimisation: How to Stop Overpaying for Your Infrastructure",
   description:
     "Practical FinOps for growing businesses: find waste, rightsize resources, use commitment discounts wisely and build cost awareness into engineering.",
   publishAt: "2026-11-23T14:00:00Z",
@@ -261,7 +329,10 @@ const finops: Post = {
     "cloud spending",
     "rightsizing cloud resources",
   ],
-  hero: { src: "1558494949-ef010cbdcc31", alt: "Rows of server racks with network cables in a data centre" },
+  hero: {
+    src: "1558494949-ef010cbdcc31",
+    alt: "Rows of server racks with network cables in a data centre",
+  },
   service: { label: "Tech Consultation", href: "/services/tech-consultation" },
   takeaways: [
     "FinOps is a cultural practice that brings engineering, finance and business together to maximise the value of cloud spend.",
@@ -290,10 +361,22 @@ const finops: Post = {
     h2("Step 2: Remove waste"),
     table(
       ["Common waste", "What to do"],
-      ["Idle development and test environments", "Schedule them to shut down outside working hours"],
-      ["Oversized servers and databases", "Rightsize based on actual CPU and memory use"],
-      ["Unattached disks, old snapshots and backups", "Apply retention policies and delete orphans"],
-      ["Forgotten experiments and proofs of concept", "Require an owner and expiry date for new resources"],
+      [
+        "Idle development and test environments",
+        "Schedule them to shut down outside working hours",
+      ],
+      [
+        "Oversized servers and databases",
+        "Rightsize based on actual CPU and memory use",
+      ],
+      [
+        "Unattached disks, old snapshots and backups",
+        "Apply retention policies and delete orphans",
+      ],
+      [
+        "Forgotten experiments and proofs of concept",
+        "Require an owner and expiry date for new resources",
+      ],
       ["Expensive data transfer", "Review architecture, caching and CDN use"],
     ),
     img(
@@ -355,7 +438,11 @@ const finops: Post = {
     },
   ],
   references: [
-    { title: "What is FinOps?", publisher: "FinOps Foundation", url: "https://www.finops.org/introduction/what-is-finops/" },
+    {
+      title: "What is FinOps?",
+      publisher: "FinOps Foundation",
+      url: "https://www.finops.org/introduction/what-is-finops/",
+    },
     {
       title: "Cost Optimization Pillar: AWS Well-Architected Framework",
       publisher: "Amazon Web Services",
@@ -388,7 +475,10 @@ const vrTraining: Post = {
     "VR soft skills training",
     "VR training ROI",
   ],
-  hero: { src: "1593508512255-86ab42a8e620", alt: "Man wearing a VR headset and holding controllers against a purple background" },
+  hero: {
+    src: "1593508512255-86ab42a8e620",
+    alt: "Man wearing a VR headset and holding controllers against a purple background",
+  },
   service: { label: "AR & VR Development", href: "/services/ar-vr" },
   takeaways: [
     "In PwC's study, VR learners completed training up to 4x faster than classroom learners and were up to 275% more confident applying what they learned.",
@@ -416,10 +506,26 @@ const vrTraining: Post = {
     h2("Where VR training works best"),
     table(
       ["Scenario type", "Why VR helps", "Examples"],
-      ["Dangerous", "Practise safely without real-world risk", "Fire safety, working at heights, hazardous materials"],
-      ["Expensive or rare", "Repeat situations that are costly or infrequent", "Equipment failures, emergency procedures"],
-      ["Emotionally difficult", "Rehearse hard conversations realistically", "Customer de-escalation, feedback conversations, leadership"],
-      ["Spatial or procedural", "Learn by doing in 3D", "Equipment assembly, maintenance, facility orientation"],
+      [
+        "Dangerous",
+        "Practise safely without real-world risk",
+        "Fire safety, working at heights, hazardous materials",
+      ],
+      [
+        "Expensive or rare",
+        "Repeat situations that are costly or infrequent",
+        "Equipment failures, emergency procedures",
+      ],
+      [
+        "Emotionally difficult",
+        "Rehearse hard conversations realistically",
+        "Customer de-escalation, feedback conversations, leadership",
+      ],
+      [
+        "Spatial or procedural",
+        "Learn by doing in 3D",
+        "Equipment assembly, maintenance, facility orientation",
+      ],
     ),
     img(
       "1592478411213-6153e4ebc07d",
@@ -484,11 +590,16 @@ const vrTraining: Post = {
   ],
   references: [
     {
-      title: "How virtual reality is redefining soft skills training (The Effectiveness of VR Soft Skills Training in the Enterprise)",
+      title:
+        "How virtual reality is redefining soft skills training (The Effectiveness of VR Soft Skills Training in the Enterprise)",
       publisher: "PwC",
       url: "https://www.pwc.com/us/en/tech-effect/emerging-tech/virtual-reality-study.html",
     },
-    { title: "Theory", publisher: "Center for Self-Determination Theory", url: "https://selfdeterminationtheory.org/theory/" },
+    {
+      title: "Theory",
+      publisher: "Center for Self-Determination Theory",
+      url: "https://selfdeterminationtheory.org/theory/",
+    },
     {
       title: "Web Content Accessibility Guidelines (WCAG) Overview",
       publisher: "W3C Web Accessibility Initiative",

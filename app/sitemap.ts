@@ -21,7 +21,11 @@ const PAGES = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    ...PAGES.map((path) => ({ url: `${SITE_URL}${path}`, changeFrequency: "monthly" as const, priority: path ? 0.7 : 1 })),
+    ...PAGES.map((path) => ({
+      url: `${SITE_URL}${path}`,
+      changeFrequency: "monthly" as const,
+      priority: path ? 0.7 : 1,
+    })),
     ...publishedPosts().map((p) => ({
       url: `${SITE_URL}/blogs/${p.slug}`,
       lastModified: p.publishAt,

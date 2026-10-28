@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/db/connect";
 import { Newsletter } from "@/lib/db/models/Newsletter";
 import { errorResponse, readJsonBody } from "@/lib/api/helpers";
 import { isSpam } from "@/lib/spam";
+import { clientIp, isRateLimited, tooManyRequests } from "@/lib/api/rate-limit";
 
 export async function POST(request: Request) {
   try {
@@ -13,8 +14,11 @@ export async function POST(request: Request) {
     const body = await readJsonBody<{ email?: string; website?: string }>(request);
     const email = body.email?.trim().toLowerCase() || "";
 
-    if (!email) {
-      return errorResponse("Email is required.");
+    if (!email || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return errorResponse("A valid email is required.");
+    }
+    if (await isRateLimited(`newsletter:${clientIp(request)}`, 10, 3600)) {
+      return tooManyRequests(3600);
     }
 
     // Pretend success so bots don't learn they were blocked.

@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { clientIp, clearRateLimit, isRateLimited, tooManyRequests } from "@/lib/api/rate-limit";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import { User } from "@/lib/db/models/User";
@@ -30,6 +31,13 @@ export async function handleLogin(request: Request) {
       return errorResponse("Username and password are required.", 400);
     }
 
+    // Brute-force protection: 20 failed tries per IP and 5 per account every 15 minutes.
+    const ipKey = `login-ip:${clientIp(request)}`;
+    const userKey = `login-user:${username.toLowerCase()}`;
+    if ((await isRateLimited(ipKey, 20, 900)) || (await isRateLimited(userKey, 5, 900))) {
+      return tooManyRequests(900);
+    }
+
     const user = await User.findOne({
       username: username.toLowerCase(),
     }).lean();
@@ -37,6 +45,8 @@ export async function handleLogin(request: Request) {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return errorResponse("Invalid username or password.", 401);
     }
+
+    await clearRateLimit(userKey);
 
     const response = NextResponse.json({
       success: true,

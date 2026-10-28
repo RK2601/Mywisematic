@@ -1,8 +1,20 @@
-import { Post, h2, h3, p, ul, tip, warn, checklist, table, img } from "../types";
+import {
+  Post,
+  h2,
+  h3,
+  p,
+  ul,
+  tip,
+  warn,
+  checklist,
+  table,
+  img,
+} from "../types";
 
 const post: Post = {
   slug: "build-vs-buy-custom-saas",
-  title: "Build vs. Buy: How to Decide Whether Your Business Needs Custom Software",
+  title:
+    "Build vs. Buy: How to Decide Whether Your Business Needs Custom Software",
   description:
     "Off-the-shelf SaaS or custom software? A practical decision framework covering total cost, differentiation, integration and risk, with a scoring checklist.",
   publishAt: "2026-11-01T14:00:00Z",
@@ -14,7 +26,10 @@ const post: Post = {
     "total cost of ownership software",
     "when to build custom software",
   ],
-  hero: { src: "1559136555-9303baea8ebd", alt: "Bright open-plan startup office with people working at desks" },
+  hero: {
+    src: "1559136555-9303baea8ebd",
+    alt: "Bright open-plan startup office with people working at desks",
+  },
   service: { label: "SaaS Development", href: "/services/saas" },
   takeaways: [
     "Buy for commodity processes (payroll, email, accounting). Build where software is part of how you win customers or run a unique process.",
@@ -43,15 +58,35 @@ const post: Post = {
     ),
     table(
       ["Cost factor", "Buy (SaaS)", "Build (custom)"],
-      ["Upfront cost", "Low: setup and onboarding", "Higher: design and development"],
-      ["Ongoing cost", "Per-user or usage fees that grow with you", "Hosting, maintenance and improvements"],
-      ["Integration", "Limited to the vendor's APIs and plans", "Designed around your systems"],
-      ["Workarounds", "Manual steps where the tool doesn't fit", "Minimal if well designed"],
-      ["Switching cost", "Data migration and retraining if you leave", "You own the code and data"],
+      [
+        "Upfront cost",
+        "Low: setup and onboarding",
+        "Higher: design and development",
+      ],
+      [
+        "Ongoing cost",
+        "Per-user or usage fees that grow with you",
+        "Hosting, maintenance and improvements",
+      ],
+      [
+        "Integration",
+        "Limited to the vendor's APIs and plans",
+        "Designed around your systems",
+      ],
+      [
+        "Workarounds",
+        "Manual steps where the tool doesn't fit",
+        "Minimal if well designed",
+      ],
+      [
+        "Switching cost",
+        "Data migration and retraining if you leave",
+        "You own the code and data",
+      ],
       ["Time to value", "Days to weeks", "Weeks to months"],
     ),
     warn(
-      "The hidden cost of \"almost fits\"",
+      'The hidden cost of "almost fits"',
       "A tool that fits 80% of your process can cost more than it saves if your team spends hours every week on copy-paste workarounds. Ask the people doing the work to estimate that time honestly.",
     ),
     h2("Five signs it's time to build"),
@@ -81,7 +116,7 @@ const post: Post = {
     ),
     h3("Plan for maintenance from day one"),
     p(
-      "Software is never \"finished.\" Budget for updates, security patches and improvements, typically as an ongoing retainer. The idea of [technical debt](https://www.martinfowler.com/bliki/TechnicalDebt.html), explained well by Martin Fowler, is a useful lens: shortcuts taken today become interest paid tomorrow.",
+      'Software is never "finished." Budget for updates, security patches and improvements, typically as an ongoing retainer. The idea of [technical debt](https://www.martinfowler.com/bliki/TechnicalDebt.html), explained well by Martin Fowler, is a useful lens: shortcuts taken today become interest paid tomorrow.',
     ),
     h3("Insist on ownership and portability"),
     p(
@@ -119,7 +154,11 @@ const post: Post = {
     },
   ],
   references: [
-    { title: "Technical Debt", publisher: "Martin Fowler", url: "https://www.martinfowler.com/bliki/TechnicalDebt.html" },
+    {
+      title: "Technical Debt",
+      publisher: "Martin Fowler",
+      url: "https://www.martinfowler.com/bliki/TechnicalDebt.html",
+    },
     {
       title: "User stories with examples and a template",
       publisher: "Atlassian",

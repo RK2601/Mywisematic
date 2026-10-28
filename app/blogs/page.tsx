@@ -16,7 +16,8 @@ export const metadata: Metadata = {
     type: "website",
     url: `${SITE_URL}/blogs`,
     title: "WiseMatic Blog",
-    description: "Practical, well-researched technology guides for growing businesses.",
+    description:
+      "Practical, well-researched technology guides for growing businesses.",
     siteName: "WiseMatic",
   },
 };

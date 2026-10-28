@@ -14,12 +14,19 @@ export type PostCard = {
 };
 
 const fmt = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Toronto" });
+  new Date(iso).toLocaleDateString("en-CA", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "America/Toronto",
+  });
 
 function Meta({ p }: { p: PostCard }) {
   return (
     <div className="flex items-center gap-3 text-xs text-muted-foreground">
-      <span className="font-medium uppercase tracking-wider text-[#399AD2]">{p.category}</span>
+      <span className="font-medium uppercase tracking-wider text-[#399AD2]">
+        {p.category}
+      </span>
       <span aria-hidden>·</span>
       <time dateTime={p.publishAt}>{fmt(p.publishAt)}</time>
       <span aria-hidden>·</span>
@@ -31,7 +38,13 @@ function Meta({ p }: { p: PostCard }) {
   );
 }
 
-export function PostCards({ posts, featured }: { posts: PostCard[]; featured: boolean }) {
+export function PostCards({
+  posts,
+  featured,
+}: {
+  posts: PostCard[];
+  featured: boolean;
+}) {
   const [first, ...rest] = posts;
   const grid = featured ? rest : posts;
   return (
@@ -55,11 +68,17 @@ export function PostCards({ posts, featured }: { posts: PostCard[]; featured: bo
             <span className="w-fit rounded-full border border-[#399AD2]/30 bg-[#399AD2]/10 px-3 py-1 text-xs font-medium text-[#7cc0e8]">
               Latest article
             </span>
-            <h2 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">{first.title}</h2>
+            <h2 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+              {first.title}
+            </h2>
             <p className="text-muted-foreground">{first.description}</p>
             <Meta p={first} />
             <span className="inline-flex items-center text-sm font-medium text-[#399AD2]">
-              Read article <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+              Read article{" "}
+              <ArrowRight
+                className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1"
+                aria-hidden
+              />
             </span>
           </div>
         </Link>
@@ -84,8 +103,12 @@ export function PostCards({ posts, featured }: { posts: PostCard[]; featured: bo
               </div>
               <div className="flex flex-1 flex-col gap-3 p-5">
                 <Meta p={p} />
-                <h3 className="font-semibold leading-snug text-foreground group-hover:text-[#7cc0e8]">{p.title}</h3>
-                <p className="line-clamp-3 text-sm text-muted-foreground">{p.description}</p>
+                <h3 className="font-semibold leading-snug text-foreground group-hover:text-[#7cc0e8]">
+                  {p.title}
+                </h3>
+                <p className="line-clamp-3 text-sm text-muted-foreground">
+                  {p.description}
+                </p>
               </div>
             </Link>
           ))}

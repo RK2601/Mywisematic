@@ -1,4 +1,16 @@
-import { Post, h2, h3, p, ul, ol, tip, warn, checklist, table, img } from "../types";
+import {
+  Post,
+  h2,
+  h3,
+  p,
+  ul,
+  ol,
+  tip,
+  warn,
+  checklist,
+  table,
+  img,
+} from "../types";
 
 const accessibility: Post = {
   slug: "website-accessibility-wcag-aoda-guide",
@@ -14,8 +26,14 @@ const accessibility: Post = {
     "accessible web design",
     "web accessibility checklist",
   ],
-  hero: { src: "1486312338219-ce68d2c6f44d", alt: "Close-up of hands typing on a laptop keyboard" },
-  service: { label: "Digital Marketing & Web", href: "/services/digital-marketing" },
+  hero: {
+    src: "1486312338219-ce68d2c6f44d",
+    alt: "Close-up of hands typing on a laptop keyboard",
+  },
+  service: {
+    label: "Digital Marketing & Web",
+    href: "/services/digital-marketing",
+  },
   takeaways: [
     "Statistics Canada reports that 27% of Canadians aged 15 and over (about 8 million people) have one or more disabilities.",
     "Under Ontario's AODA regulations, private and non-profit organisations with 50+ employees must make public websites conform to WCAG 2.0 Level AA.",
@@ -47,12 +65,36 @@ const accessibility: Post = {
     ),
     table(
       ["Issue", "Share of home pages", "How to fix"],
-      ["Low-contrast text", "83.9%", "Meet 4.5:1 contrast for normal text and 3:1 for large text"],
-      ["Images missing alt text", "53.1%", "Describe meaningful images; use empty alt for decorative ones"],
-      ["Form inputs without labels", "51%", "Give every field a visible, programmatically linked label"],
-      ["Links with no text", "46.3%", "Ensure icon links have an accessible name"],
-      ["Buttons with no text", "30.6%", "Add a label to icon-only buttons (e.g. aria-label=\"Search\")"],
-      ["Missing page language", "13.5%", "Set the lang attribute on the html element"],
+      [
+        "Low-contrast text",
+        "83.9%",
+        "Meet 4.5:1 contrast for normal text and 3:1 for large text",
+      ],
+      [
+        "Images missing alt text",
+        "53.1%",
+        "Describe meaningful images; use empty alt for decorative ones",
+      ],
+      [
+        "Form inputs without labels",
+        "51%",
+        "Give every field a visible, programmatically linked label",
+      ],
+      [
+        "Links with no text",
+        "46.3%",
+        "Ensure icon links have an accessible name",
+      ],
+      [
+        "Buttons with no text",
+        "30.6%",
+        'Add a label to icon-only buttons (e.g. aria-label="Search")',
+      ],
+      [
+        "Missing page language",
+        "13.5%",
+        "Set the lang attribute on the html element",
+      ],
     ),
     img(
       "1516321318423-f06f85e504b3",
@@ -72,7 +114,7 @@ const accessibility: Post = {
     ),
     warn(
       "Overlays aren't a shortcut",
-      "One-line \"accessibility overlay\" widgets can't fix underlying code problems and are criticised by many disability advocates. Fix the source instead.",
+      'One-line "accessibility overlay" widgets can\'t fix underlying code problems and are criticised by many disability advocates. Fix the source instead.',
     ),
     h2("A practical rollout plan"),
     ol(
@@ -117,11 +159,31 @@ const accessibility: Post = {
       publisher: "Statistics Canada (The Daily)",
       url: "https://www150.statcan.gc.ca/n1/daily-quotidien/231201/dq231201b-eng.htm",
     },
-    { title: "O. Reg. 191/11: Integrated Accessibility Standards", publisher: "Government of Ontario", url: "https://www.ontario.ca/laws/regulation/110191" },
-    { title: "How to make websites accessible", publisher: "Government of Ontario", url: "https://www.ontario.ca/page/how-make-websites-accessible" },
-    { title: "Web Content Accessibility Guidelines (WCAG) 2.2", publisher: "W3C", url: "https://www.w3.org/TR/WCAG22/" },
-    { title: "The WebAIM Million", publisher: "WebAIM", url: "https://webaim.org/projects/million/" },
-    { title: "The Business Case for Digital Accessibility", publisher: "W3C Web Accessibility Initiative", url: "https://www.w3.org/WAI/business-case/" },
+    {
+      title: "O. Reg. 191/11: Integrated Accessibility Standards",
+      publisher: "Government of Ontario",
+      url: "https://www.ontario.ca/laws/regulation/110191",
+    },
+    {
+      title: "How to make websites accessible",
+      publisher: "Government of Ontario",
+      url: "https://www.ontario.ca/page/how-make-websites-accessible",
+    },
+    {
+      title: "Web Content Accessibility Guidelines (WCAG) 2.2",
+      publisher: "W3C",
+      url: "https://www.w3.org/TR/WCAG22/",
+    },
+    {
+      title: "The WebAIM Million",
+      publisher: "WebAIM",
+      url: "https://webaim.org/projects/million/",
+    },
+    {
+      title: "The Business Case for Digital Accessibility",
+      publisher: "W3C Web Accessibility Initiative",
+      url: "https://www.w3.org/WAI/business-case/",
+    },
   ],
 };
 
@@ -139,7 +201,10 @@ const gamification: Post = {
     "self-determination theory",
     "gamified learning",
   ],
-  hero: { src: "1511512578047-dfb367046420", alt: "Neon-lit arcade room with rows of game cabinets" },
+  hero: {
+    src: "1511512578047-dfb367046420",
+    alt: "Neon-lit arcade room with rows of game cabinets",
+  },
   service: { label: "Game Development", href: "/services/game-dev" },
   takeaways: [
     "Gamification uses game design elements in non-game contexts. Research finds it can work, but results depend heavily on context and users.",
@@ -161,9 +226,21 @@ const gamification: Post = {
     ),
     table(
       ["Need", "What it means", "Design examples"],
-      ["Autonomy", "Feeling in control of your choices", "Choose your path, set your own goals, optional challenges"],
-      ["Competence", "Feeling capable and improving", "Clear progress, levels, skill-matched difficulty, useful feedback"],
-      ["Relatedness", "Feeling connected to others", "Teams, shared goals, recognition from peers, community"],
+      [
+        "Autonomy",
+        "Feeling in control of your choices",
+        "Choose your path, set your own goals, optional challenges",
+      ],
+      [
+        "Competence",
+        "Feeling capable and improving",
+        "Clear progress, levels, skill-matched difficulty, useful feedback",
+      ],
+      [
+        "Relatedness",
+        "Feeling connected to others",
+        "Teams, shared goals, recognition from peers, community",
+      ],
     ),
     p(
       "Points, badges and leaderboards are tools, not goals. They work when they make competence visible or support connection, and they backfire when they feel controlling or pointless.",
@@ -180,7 +257,7 @@ const gamification: Post = {
     ),
     h3("Customer onboarding in apps and SaaS"),
     p(
-      "Progress checklists (\"3 of 5 steps complete\") guide new users to their first success quickly. That \"aha moment\" is strongly linked to whether people stay.",
+      'Progress checklists ("3 of 5 steps complete") guide new users to their first success quickly. That "aha moment" is strongly linked to whether people stay.',
     ),
     h3("Loyalty and community"),
     p(
@@ -192,7 +269,7 @@ const gamification: Post = {
     ),
     h2("A five-step design process"),
     ol(
-      "**Define the behaviour and the outcome:** \"complete onboarding within 7 days\" is better than \"increase engagement.\"",
+      '**Define the behaviour and the outcome:** "complete onboarding within 7 days" is better than "increase engagement."',
       "**Understand your players:** what motivates them, what frustrates them and how much time they have.",
       "**Design the core loop:** action → feedback → progress → new challenge.",
       "**Choose mechanics that serve the needs:** progress bars for competence, choices for autonomy, teams for relatedness.",
@@ -232,11 +309,16 @@ const gamification: Post = {
   ],
   references: [
     {
-      title: "Does Gamification Work? A Literature Review of Empirical Studies on Gamification (HICSS 2014)",
+      title:
+        "Does Gamification Work? A Literature Review of Empirical Studies on Gamification (HICSS 2014)",
       publisher: "Hamari, Koivisto & Sarsa (IEEE)",
       url: "https://doi.org/10.1109/HICSS.2014.377",
     },
-    { title: "Theory", publisher: "Center for Self-Determination Theory", url: "https://selfdeterminationtheory.org/theory/" },
+    {
+      title: "Theory",
+      publisher: "Center for Self-Determination Theory",
+      url: "https://selfdeterminationtheory.org/theory/",
+    },
     {
       title: "10 Usability Heuristics for User Interface Design",
       publisher: "Nielsen Norman Group",
@@ -259,7 +341,10 @@ const owasp: Post = {
     "secure software development",
     "cybersecurity for SMBs",
   ],
-  hero: { src: "1563986768609-322da13575f3", alt: "Person holding a phone with a laptop open on a desk, representing app security" },
+  hero: {
+    src: "1563986768609-322da13575f3",
+    alt: "Person holding a phone with a laptop open on a desk, representing app security",
+  },
   service: { label: "Tech Consultation", href: "/services/tech-consultation" },
   takeaways: [
     "The OWASP Top 10 is the most widely used awareness list of web application security risks. The current edition is 2025.",
@@ -278,16 +363,56 @@ const owasp: Post = {
     h2("The OWASP Top 10: 2025, in plain English"),
     table(
       ["#", "Risk", "What it means"],
-      ["A01", "Broken Access Control", "Users can see or do things they shouldn't, such as another customer's invoices"],
-      ["A02", "Security Misconfiguration", "Unsafe defaults, exposed admin panels, overly permissive cloud storage"],
-      ["A03", "Software Supply Chain Failures", "Compromised or vulnerable libraries, packages and build pipelines"],
-      ["A04", "Cryptographic Failures", "Sensitive data not encrypted properly in transit or at rest"],
-      ["A05", "Injection", "Untrusted input executed as commands or queries (e.g. SQL injection)"],
-      ["A06", "Insecure Design", "Security flaws baked into the design, not just the code"],
-      ["A07", "Authentication Failures", "Weak login, session or password-reset handling"],
-      ["A08", "Software or Data Integrity Failures", "Trusting updates, data or code without verifying them"],
-      ["A09", "Security Logging and Alerting Failures", "Attacks go unnoticed because nothing is logged or alerted"],
-      ["A10", "Mishandling of Exceptional Conditions", "Errors and edge cases that leave the system in an unsafe state"],
+      [
+        "A01",
+        "Broken Access Control",
+        "Users can see or do things they shouldn't, such as another customer's invoices",
+      ],
+      [
+        "A02",
+        "Security Misconfiguration",
+        "Unsafe defaults, exposed admin panels, overly permissive cloud storage",
+      ],
+      [
+        "A03",
+        "Software Supply Chain Failures",
+        "Compromised or vulnerable libraries, packages and build pipelines",
+      ],
+      [
+        "A04",
+        "Cryptographic Failures",
+        "Sensitive data not encrypted properly in transit or at rest",
+      ],
+      [
+        "A05",
+        "Injection",
+        "Untrusted input executed as commands or queries (e.g. SQL injection)",
+      ],
+      [
+        "A06",
+        "Insecure Design",
+        "Security flaws baked into the design, not just the code",
+      ],
+      [
+        "A07",
+        "Authentication Failures",
+        "Weak login, session or password-reset handling",
+      ],
+      [
+        "A08",
+        "Software or Data Integrity Failures",
+        "Trusting updates, data or code without verifying them",
+      ],
+      [
+        "A09",
+        "Security Logging and Alerting Failures",
+        "Attacks go unnoticed because nothing is logged or alerted",
+      ],
+      [
+        "A10",
+        "Mishandling of Exceptional Conditions",
+        "Errors and edge cases that leave the system in an unsafe state",
+      ],
     ),
     p(
       "Source: [OWASP Top 10 project](https://owasp.org/www-project-top-ten/). Two changes stand out in 2025: **software supply chain failures** entered the list at number three, and **mishandling of exceptional conditions** joined at number ten.",
@@ -356,12 +481,29 @@ const owasp: Post = {
     },
   ],
   references: [
-    { title: "OWASP Top 10 project (2025 edition)", publisher: "OWASP Foundation", url: "https://owasp.org/www-project-top-ten/" },
-    { title: "Cost of a Data Breach Report", publisher: "IBM", url: "https://www.ibm.com/reports/data-breach" },
-    { title: "Data Breach Investigations Report", publisher: "Verizon Business", url: "https://www.verizon.com/business/resources/reports/dbir/" },
-    { title: "Secure by Design", publisher: "Cybersecurity and Infrastructure Security Agency (CISA)", url: "https://www.cisa.gov/securebydesign" },
     {
-      title: "Baseline cyber security controls for small and medium organizations",
+      title: "OWASP Top 10 project (2025 edition)",
+      publisher: "OWASP Foundation",
+      url: "https://owasp.org/www-project-top-ten/",
+    },
+    {
+      title: "Cost of a Data Breach Report",
+      publisher: "IBM",
+      url: "https://www.ibm.com/reports/data-breach",
+    },
+    {
+      title: "Data Breach Investigations Report",
+      publisher: "Verizon Business",
+      url: "https://www.verizon.com/business/resources/reports/dbir/",
+    },
+    {
+      title: "Secure by Design",
+      publisher: "Cybersecurity and Infrastructure Security Agency (CISA)",
+      url: "https://www.cisa.gov/securebydesign",
+    },
+    {
+      title:
+        "Baseline cyber security controls for small and medium organizations",
       publisher: "Canadian Centre for Cyber Security",
       url: "https://www.cyber.gc.ca/en/guidance/baseline-cyber-security-controls-small-and-medium-organizations",
     },
@@ -382,7 +524,10 @@ const supportBot: Post = {
     "chatbot best practices",
     "conversational AI",
   ],
-  hero: { src: "1573497019940-1c28c88b4f3e", alt: "Smiling customer service professional in an office" },
+  hero: {
+    src: "1573497019940-1c28c88b4f3e",
+    alt: "Smiling customer service professional in an office",
+  },
   service: { label: "AI & Machine Learning", href: "/services/ai-ml" },
   takeaways: [
     "Virtual agents and chatbots are among the most common AI applications in Canadian businesses that use AI (26.5%, Statistics Canada).",
@@ -409,7 +554,7 @@ const supportBot: Post = {
     ),
     h3("3. Make the handoff effortless"),
     p(
-      "Offer \"talk to a person\" at any point, and pass the full conversation to the agent so customers never repeat themselves. Escalate automatically for frustration, complaints, sensitive topics or high-value accounts.",
+      'Offer "talk to a person" at any point, and pass the full conversation to the agent so customers never repeat themselves. Escalate automatically for frustration, complaints, sensitive topics or high-value accounts.',
     ),
     h3("4. Take action, safely"),
     p(
@@ -424,9 +569,18 @@ const supportBot: Post = {
     table(
       ["Good first automations", "Keep with humans (at first)"],
       ["Order and delivery status", "Complaints and escalations"],
-      ["Opening hours, policies, how-to questions", "Billing disputes and refunds above a threshold"],
-      ["Appointment booking and changes", "Sensitive personal or health matters"],
-      ["Password resets and account basics", "Complex technical troubleshooting"],
+      [
+        "Opening hours, policies, how-to questions",
+        "Billing disputes and refunds above a threshold",
+      ],
+      [
+        "Appointment booking and changes",
+        "Sensitive personal or health matters",
+      ],
+      [
+        "Password resets and account basics",
+        "Complex technical troubleshooting",
+      ],
     ),
     tip(
       "Use your data",
@@ -477,12 +631,21 @@ const supportBot: Post = {
   ],
   references: [
     {
-      title: "Analysis on artificial intelligence use by businesses in Canada, second quarter of 2024",
+      title:
+        "Analysis on artificial intelligence use by businesses in Canada, second quarter of 2024",
       publisher: "Statistics Canada",
       url: "https://www150.statcan.gc.ca/n1/pub/11-621-m/11-621-m2024008-eng.htm",
     },
-    { title: "The User Experience of Chatbots", publisher: "Nielsen Norman Group", url: "https://www.nngroup.com/articles/chatbots/" },
-    { title: "CX Trends Report", publisher: "Zendesk", url: "https://www.zendesk.com/cx-trends-report/" },
+    {
+      title: "The User Experience of Chatbots",
+      publisher: "Nielsen Norman Group",
+      url: "https://www.nngroup.com/articles/chatbots/",
+    },
+    {
+      title: "CX Trends Report",
+      publisher: "Zendesk",
+      url: "https://www.zendesk.com/cx-trends-report/",
+    },
     {
       title: "OWASP Top 10 for Large Language Model Applications",
       publisher: "OWASP Foundation",

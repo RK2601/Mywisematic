@@ -13,9 +13,11 @@ const ALL: Post[] = [p01, p02, p03, ...batchB, ...batchC, ...batchD].sort(
 );
 
 // Scheduling: a post is live once its publishAt has passed (checked per request).
-export const isPublished = (post: Post, now = Date.now()) => +new Date(post.publishAt) <= now;
+export const isPublished = (post: Post, now = Date.now()) =>
+  +new Date(post.publishAt) <= now;
 
-export const publishedPosts = (now = Date.now()) => ALL.filter((p) => isPublished(p, now));
+export const publishedPosts = (now = Date.now()) =>
+  ALL.filter((p) => isPublished(p, now));
 
 export const getPublishedPost = (slug: string, now = Date.now()) =>
   ALL.find((p) => p.slug === slug && isPublished(p, now));
@@ -24,8 +26,19 @@ export const allPostsForChecks = () => ALL;
 
 export const readingMinutes = (post: Post) => {
   const text = post.body
-    .map((b) => ("text" in b ? b.text : "items" in b ? b.items.join(" ") : "rows" in b ? b.rows.flat().join(" ") : ""))
-    .concat(post.takeaways, post.faq.map((f) => `${f.q} ${f.a}`))
+    .map((b) =>
+      "text" in b
+        ? b.text
+        : "items" in b
+          ? b.items.join(" ")
+          : "rows" in b
+            ? b.rows.flat().join(" ")
+            : "",
+    )
+    .concat(
+      post.takeaways,
+      post.faq.map((f) => `${f.q} ${f.a}`),
+    )
     .join(" ");
   return Math.max(1, Math.round(text.split(/\s+/).length / 220));
 };

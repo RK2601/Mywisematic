@@ -1,4 +1,16 @@
-import { Post, h2, h3, p, ul, ol, tip, warn, checklist, table, img } from "../types";
+import {
+  Post,
+  h2,
+  h3,
+  p,
+  ul,
+  ol,
+  tip,
+  warn,
+  checklist,
+  table,
+  img,
+} from "../types";
 
 const post: Post = {
   slug: "ai-roadmap-for-small-business",
@@ -14,7 +26,10 @@ const post: Post = {
     "how to start with AI",
     "AI pilot project",
   ],
-  hero: { src: "1677442136019-21780ecad995", alt: "Abstract 3D letters spelling AI on a blue background" },
+  hero: {
+    src: "1677442136019-21780ecad995",
+    alt: "Abstract 3D letters spelling AI on a blue background",
+  },
   service: { label: "AI & Machine Learning", href: "/services/ai-ml" },
   takeaways: [
     "Most Canadian businesses have not adopted AI yet: Statistics Canada found 6.1% used it to produce goods or deliver services, so starting now is still an advantage.",
@@ -39,7 +54,7 @@ const post: Post = {
     ),
     h2("Step 1 (Days 1–15): Find the right first problem"),
     p(
-      "The most common mistake is starting with a tool (\"we should use a chatbot\") instead of a problem (\"we spend 30 hours a week answering the same supplier emails\"). Good first AI projects share four traits:",
+      'The most common mistake is starting with a tool ("we should use a chatbot") instead of a problem ("we spend 30 hours a week answering the same supplier emails"). Good first AI projects share four traits:',
     ),
     ul(
       "**Repetitive:** the task happens daily or weekly and follows a recognisable pattern.",
@@ -51,15 +66,40 @@ const post: Post = {
       "Run a 60-minute workshop with the people who actually do the work. Ask each person to list the three tasks they would most like to stop doing. You will usually find two or three strong candidates within an hour.",
     ),
     table(
-      ["Candidate use case", "Where the saving comes from", "Risk level", "Good first pilot?"],
-      ["Drafting replies to common customer emails", "Less typing and searching per reply", "Low (a person sends)", "Yes"],
-      ["Extracting data from invoices into accounting", "Less manual data entry", "Low–medium", "Yes"],
-      ["Summarising sales calls into CRM notes", "Minutes saved after every call", "Low", "Yes"],
-      ["Fully automated pricing decisions", "Unclear", "High", "Not as a first project"],
+      [
+        "Candidate use case",
+        "Where the saving comes from",
+        "Risk level",
+        "Good first pilot?",
+      ],
+      [
+        "Drafting replies to common customer emails",
+        "Less typing and searching per reply",
+        "Low (a person sends)",
+        "Yes",
+      ],
+      [
+        "Extracting data from invoices into accounting",
+        "Less manual data entry",
+        "Low–medium",
+        "Yes",
+      ],
+      [
+        "Summarising sales calls into CRM notes",
+        "Minutes saved after every call",
+        "Low",
+        "Yes",
+      ],
+      [
+        "Fully automated pricing decisions",
+        "Unclear",
+        "High",
+        "Not as a first project",
+      ],
     ),
     h2("Step 2 (Days 16–30): Set a baseline and success criteria"),
     p(
-      "You cannot prove value without a \"before\" number. For one or two weeks, measure the current process: how long it takes, how many errors occur and what it costs. Then agree on what success looks like before you build anything. For example: reduce average email handling time from 6 minutes to 3 minutes with no drop in customer satisfaction.",
+      'You cannot prove value without a "before" number. For one or two weeks, measure the current process: how long it takes, how many errors occur and what it costs. Then agree on what success looks like before you build anything. For example: reduce average email handling time from 6 minutes to 3 minutes with no drop in customer satisfaction.',
     ),
     checklist(
       "Your one-page pilot charter",
@@ -136,7 +176,8 @@ const post: Post = {
   ],
   references: [
     {
-      title: "Analysis on artificial intelligence use by businesses in Canada, second quarter of 2024",
+      title:
+        "Analysis on artificial intelligence use by businesses in Canada, second quarter of 2024",
       publisher: "Statistics Canada",
       url: "https://www150.statcan.gc.ca/n1/pub/11-621-m/11-621-m2024008-eng.htm",
     },
@@ -146,13 +187,15 @@ const post: Post = {
       url: "https://www.nist.gov/itl/ai-risk-management-framework",
     },
     {
-      title: "The Personal Information Protection and Electronic Documents Act (PIPEDA)",
+      title:
+        "The Personal Information Protection and Electronic Documents Act (PIPEDA)",
       publisher: "Office of the Privacy Commissioner of Canada",
       url: "https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/",
     },
     {
       title: "AI Index Report",
-      publisher: "Stanford Institute for Human-Centered Artificial Intelligence",
+      publisher:
+        "Stanford Institute for Human-Centered Artificial Intelligence",
       url: "https://hai.stanford.edu/ai-index",
     },
   ],

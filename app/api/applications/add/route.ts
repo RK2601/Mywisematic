@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { notifyOwner } from "@/lib/notify";
+import { clientIp, isRateLimited, tooManyRequests } from "@/lib/api/rate-limit";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import { Application } from "@/lib/db/models/Application";
@@ -27,6 +28,12 @@ export async function POST(request: Request) {
     if (!fullName || !email || !jobName) {
       return errorResponse("Full name, email, and job name are required.");
     }
+    if (fullName.length > 120 || email.length > 254 || phone.length > 40 || jobName.length > 200) {
+      return errorResponse("One of the fields is too long.");
+    }
+    if (await isRateLimited(`apply:${clientIp(request)}`, 10, 3600)) {
+      return tooManyRequests(3600);
+    }
 
     const files: File[] = [];
     if (coverLetterField instanceof File && coverLetterField.size > 0) {
@@ -52,7 +59,7 @@ export async function POST(request: Request) {
     if (coverLetterField instanceof File && coverLetterField.size > 0) {
       coverLetter = await storeApplicationUpload(coverLetterField);
     } else {
-      coverLetter = String(coverLetterField || "");
+      coverLetter = String(coverLetterField || "").slice(0, 10000);
     }
 
     let cvResume = "";

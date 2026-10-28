@@ -12,18 +12,10 @@ const controlClass =
   "h-12 rounded-xl border border-white/10 bg-white/[0.03] text-sm text-foreground transition-colors placeholder:text-muted-foreground/60 hover:border-white/20 focus:border-[#399AD2]/60 focus:outline-none focus:ring-2 focus:ring-[#399AD2]/30";
 
 const FILTERS = [
-  {
-    label: "Category",
-    icon: Layers,
-    options: ["All Categories", "Sales", "Full Stack Developer", "Digital Marketing", "Software Development"],
-  },
-  { label: "Job type", icon: Briefcase, options: ["All Types", "Full Time", "Co-Op"] },
-  {
-    label: "Location",
-    icon: MapPin,
-    options: ["All Locations", "Remote", "Hybrid", "On-Site", "Toronto"],
-  },
-];
+  { label: "Category", icon: Layers, all: "All Categories", field: "jobCategory" },
+  { label: "Job type", icon: Briefcase, all: "All Types", field: "jobType" },
+  { label: "Location", icon: MapPin, all: "All Locations", field: "jobLocation" },
+] as const;
 
 // Define the interface for the job objects
 interface Job {
@@ -133,7 +125,9 @@ export default function CareerCardsSection() {
               />
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:flex">
-              {FILTERS.map(({ label, options, icon: Icon }, i) => {
+              {FILTERS.map(({ label, icon: Icon, all, field }, i) => {
+                // Options come from the jobs themselves so they always match the data.
+                const options = [all, ...Array.from(new Set(jobs.map((j) => j[field]).filter(Boolean))).sort()];
                 const [value, setValue] = [
                   [category, setCategory],
                   [type, setType],

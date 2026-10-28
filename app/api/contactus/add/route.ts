@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/db/connect";
 import { Contact } from "@/lib/db/models/Contact";
 import { errorResponse, readJsonBody } from "@/lib/api/helpers";
 import { isSpam } from "@/lib/spam";
+import { clientIp, isRateLimited, tooManyRequests } from "@/lib/api/rate-limit";
 import { notifyOwner } from "@/lib/notify";
 
 export async function POST(request: Request) {
@@ -26,6 +27,12 @@ export async function POST(request: Request) {
 
     if (!name || !email || !message) {
       return errorResponse("Name, email, and message are required.");
+    }
+    if (name.length > 120 || email.length > 254 || phone.length > 40 || message.length > 5000) {
+      return errorResponse("One of the fields is too long.");
+    }
+    if (await isRateLimited(`contact:${clientIp(request)}`, 10, 3600)) {
+      return tooManyRequests(3600);
     }
 
     // Pretend success so bots don't learn they were blocked.

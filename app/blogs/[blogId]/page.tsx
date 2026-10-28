@@ -1,9 +1,21 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, CalendarDays, ChevronRight, Clock, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  ChevronRight,
+  Clock,
+  Sparkles,
+} from "lucide-react";
 import { notFound } from "next/navigation";
-import { SITE_URL, allPostsForChecks, getPublishedPost, publishedPosts, readingMinutes } from "@/lib/blog";
+import {
+  SITE_URL,
+  allPostsForChecks,
+  getPublishedPost,
+  publishedPosts,
+  readingMinutes,
+} from "@/lib/blog";
 import { unsplash } from "@/lib/blog/types";
 import { plain, slugify } from "@/lib/blog/inline";
 import { PostBody, Rich } from "@/app/blogs/_components/post-body";
@@ -15,7 +27,12 @@ export const revalidate = 600;
 type Props = { params: { blogId: string } };
 
 const fmt = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric", timeZone: "America/Toronto" });
+  new Date(iso).toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "America/Toronto",
+  });
 
 export function generateMetadata({ params }: Props): Metadata {
   const post = getPublishedPost(params.blogId);
@@ -39,7 +56,12 @@ export function generateMetadata({ params }: Props): Metadata {
       tags: post.keywords,
       images: [{ url: image, width: 1200, alt: post.hero.alt }],
     },
-    twitter: { card: "summary_large_image", title: post.title, description: post.description, images: [image] },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [image],
+    },
   };
 }
 
@@ -54,10 +76,16 @@ export default function BlogPostPage({ params }: Props) {
 
   const url = `${SITE_URL}/blogs/${post.slug}`;
   const minutes = readingMinutes(post);
-  const toc = post.body.filter((b) => b.t === "h2").map((b) => ("text" in b ? b.text : ""));
+  const toc = post.body
+    .filter((b) => b.t === "h2")
+    .map((b) => ("text" in b ? b.text : ""));
   const related = publishedPosts()
     .filter((p) => p.slug !== post.slug)
-    .sort((a, b) => Number(b.category === post.category) - Number(a.category === post.category))
+    .sort(
+      (a, b) =>
+        Number(b.category === post.category) -
+        Number(a.category === post.category),
+    )
     .slice(0, 3);
 
   const jsonLd = [
@@ -86,7 +114,12 @@ export default function BlogPostPage({ params }: Props) {
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blogs` },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Blog",
+          item: `${SITE_URL}/blogs`,
+        },
         { "@type": "ListItem", position: 3, name: post.title, item: url },
       ],
     },
@@ -103,15 +136,31 @@ export default function BlogPostPage({ params }: Props) {
 
   return (
     <main className="relative overflow-x-clip pb-24">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="pointer-events-none absolute left-1/2 top-0 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-[#399AD2]/10 blur-3xl" />
 
       <article className="relative mx-auto max-w-6xl px-4 pt-28 sm:px-6">
-        <nav aria-label="Breadcrumb" className="mx-auto mb-8 max-w-3xl text-sm text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mx-auto mb-8 max-w-3xl text-sm text-muted-foreground"
+        >
           <ol className="flex flex-wrap items-center gap-1">
-            <li><Link href="/" className="hover:text-foreground">Home</Link></li>
+            <li>
+              <Link href="/" className="hover:text-foreground">
+                Home
+              </Link>
+            </li>
             <ChevronRight className="h-4 w-4" aria-hidden />
-            <li><Link href="/blogs" className="hover:text-foreground">Blog</Link></li>
+            <li>
+              <Link href="/blogs" className="hover:text-foreground">
+                Blog
+              </Link>
+            </li>
             <ChevronRight className="h-4 w-4" aria-hidden />
             <li className="text-zinc-400">{post.category}</li>
           </ol>
@@ -124,9 +173,13 @@ export default function BlogPostPage({ params }: Props) {
           <h1 className="mt-5 bg-gradient-to-r from-foreground to-zinc-400 bg-clip-text text-4xl font-semibold leading-tight text-transparent sm:text-5xl sm:leading-[1.1]">
             {post.title}
           </h1>
-          <p className="mt-5 text-lg leading-8 text-muted-foreground">{post.description}</p>
+          <p className="mt-5 text-lg leading-8 text-muted-foreground">
+            {post.description}
+          </p>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
-            <span className="font-medium text-zinc-300">By the WiseMatic Editorial Team</span>
+            <span className="font-medium text-zinc-300">
+              By the WiseMatic Editorial Team
+            </span>
             <span className="inline-flex items-center gap-1.5">
               <CalendarDays className="h-4 w-4" aria-hidden />
               <time dateTime={post.publishAt}>{fmt(post.publishAt)}</time>
@@ -158,7 +211,10 @@ export default function BlogPostPage({ params }: Props) {
               <ul className="space-y-2 border-l border-white/10">
                 {toc.map((t) => (
                   <li key={t}>
-                    <a href={`#${slugify(t)}`} className="-ml-px block border-l border-transparent pl-4 text-muted-foreground hover:border-[#399AD2] hover:text-foreground">
+                    <a
+                      href={`#${slugify(t)}`}
+                      className="-ml-px block border-l border-transparent pl-4 text-muted-foreground hover:border-[#399AD2] hover:text-foreground"
+                    >
                       {t}
                     </a>
                   </li>
@@ -177,7 +233,9 @@ export default function BlogPostPage({ params }: Props) {
                   {post.takeaways.map((t) => (
                     <li key={t} className="flex gap-3">
                       <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#399AD2]" />
-                      <span><Rich text={t} /></span>
+                      <span>
+                        <Rich text={t} />
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -187,26 +245,49 @@ export default function BlogPostPage({ params }: Props) {
             <PostBody blocks={post.body} />
 
             <section className="mt-16" aria-labelledby="faq">
-              <h2 id="faq" className="text-2xl font-semibold text-foreground sm:text-3xl">Frequently asked questions</h2>
+              <h2
+                id="faq"
+                className="text-2xl font-semibold text-foreground sm:text-3xl"
+              >
+                Frequently asked questions
+              </h2>
               <div className="mt-6 divide-y divide-white/10 rounded-2xl border border-white/10">
                 {post.faq.map((f) => (
-                  <details key={f.q} className="group p-5 [&_summary::-webkit-details-marker]:hidden">
+                  <details
+                    key={f.q}
+                    className="group p-5 [&_summary::-webkit-details-marker]:hidden"
+                  >
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground">
                       {f.q}
-                      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-90" aria-hidden />
+                      <ChevronRight
+                        className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-90"
+                        aria-hidden
+                      />
                     </summary>
-                    <p className="mt-3 leading-7 text-zinc-400"><Rich text={f.a} /></p>
+                    <p className="mt-3 leading-7 text-zinc-400">
+                      <Rich text={f.a} />
+                    </p>
                   </details>
                 ))}
               </div>
             </section>
 
             <section className="mt-14" aria-labelledby="references">
-              <h2 id="references" className="text-xl font-semibold text-foreground">Sources and further reading</h2>
+              <h2
+                id="references"
+                className="text-xl font-semibold text-foreground"
+              >
+                Sources and further reading
+              </h2>
               <ol className="mt-4 list-decimal space-y-2 pl-6 text-[15px] leading-7 text-zinc-400 marker:text-zinc-500">
                 {post.references.map((r) => (
                   <li key={r.url}>
-                    <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-zinc-300 underline-offset-4 hover:text-[#399AD2] hover:underline">
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-zinc-300 underline-offset-4 hover:text-[#399AD2] hover:underline"
+                    >
                       {r.title}
                     </a>{" "}
                     <span>— {r.publisher}</span>
@@ -218,13 +299,16 @@ export default function BlogPostPage({ params }: Props) {
             <section className="mt-14 overflow-hidden rounded-3xl bg-gradient-to-br from-[#399AD2]/50 via-white/10 to-purple-500/40 p-px">
               <div className="relative rounded-3xl bg-background/90 p-8 sm:p-10">
                 <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-purple-500/20 blur-3xl" />
-                <p className="text-sm font-semibold uppercase tracking-widest text-[#399AD2]">Work with WiseMatic</p>
+                <p className="text-sm font-semibold uppercase tracking-widest text-[#399AD2]">
+                  Work with WiseMatic
+                </p>
                 <h2 className="mt-2 text-2xl font-semibold text-foreground sm:text-3xl">
                   Want help putting this into practice?
                 </h2>
                 <p className="mt-3 max-w-xl text-muted-foreground">
-                  Our {post.service.label} team turns ideas like these into working solutions. Tell us what you&#39;re
-                  planning and we&#39;ll suggest a practical first step.
+                  Our {post.service.label} team turns ideas like these into
+                  working solutions. Tell us what you&#39;re planning and
+                  we&#39;ll suggest a practical first step.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link
@@ -232,7 +316,10 @@ export default function BlogPostPage({ params }: Props) {
                     className="group inline-flex h-11 items-center rounded-xl bg-gradient-to-r from-[#399AD2] to-purple-500 px-5 font-medium text-white shadow-lg shadow-[#399AD2]/20 hover:opacity-90"
                   >
                     Talk to our team
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+                    <ArrowRight
+                      className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+                      aria-hidden
+                    />
                   </Link>
                   <Link
                     href={post.service.href}
@@ -249,17 +336,36 @@ export default function BlogPostPage({ params }: Props) {
       </article>
 
       {related.length > 0 && (
-        <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6" aria-labelledby="related">
-          <h2 id="related" className="text-2xl font-semibold text-foreground">Keep reading</h2>
+        <section
+          className="mx-auto mt-24 max-w-6xl px-4 sm:px-6"
+          aria-labelledby="related"
+        >
+          <h2 id="related" className="text-2xl font-semibold text-foreground">
+            Keep reading
+          </h2>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {related.map((r) => (
-              <Link key={r.slug} href={`/blogs/${r.slug}`} className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition-colors hover:border-[#399AD2]/40">
+              <Link
+                key={r.slug}
+                href={`/blogs/${r.slug}`}
+                className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition-colors hover:border-[#399AD2]/40"
+              >
                 <div className="relative aspect-[16/9] overflow-hidden">
-                  <Image src={unsplash(r.hero.src, 800)} alt={r.hero.alt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <Image
+                    src={unsplash(r.hero.src, 800)}
+                    alt={r.hero.alt}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
                 <div className="p-5">
-                  <p className="text-xs font-medium uppercase tracking-wider text-[#399AD2]">{r.category}</p>
-                  <p className="mt-2 font-semibold leading-snug text-foreground">{r.title}</p>
+                  <p className="text-xs font-medium uppercase tracking-wider text-[#399AD2]">
+                    {r.category}
+                  </p>
+                  <p className="mt-2 font-semibold leading-snug text-foreground">
+                    {r.title}
+                  </p>
                 </div>
               </Link>
             ))}

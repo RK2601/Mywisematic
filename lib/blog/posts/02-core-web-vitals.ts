@@ -1,4 +1,16 @@
-import { Post, h2, h3, p, ul, ol, tip, warn, checklist, table, img } from "../types";
+import {
+  Post,
+  h2,
+  h3,
+  p,
+  ul,
+  ol,
+  tip,
+  warn,
+  checklist,
+  table,
+  img,
+} from "../types";
 
 const post: Post = {
   slug: "core-web-vitals-site-speed-seo",
@@ -14,8 +26,14 @@ const post: Post = {
     "improve page speed",
     "page experience Google",
   ],
-  hero: { src: "1460925895917-afdab827c52f", alt: "Laptop showing a website analytics dashboard with charts" },
-  service: { label: "Digital Marketing & SEO", href: "/services/digital-marketing" },
+  hero: {
+    src: "1460925895917-afdab827c52f",
+    alt: "Laptop showing a website analytics dashboard with charts",
+  },
+  service: {
+    label: "Digital Marketing & SEO",
+    href: "/services/digital-marketing",
+  },
   takeaways: [
     "Core Web Vitals measure loading (LCP), responsiveness (INP) and visual stability (CLS). Aim for LCP ≤ 2.5 s, INP ≤ 200 ms and CLS ≤ 0.1.",
     "Google uses Core Web Vitals as part of its page experience signals, but helpful content still matters more. Speed is the tie-breaker and the conversion booster.",
@@ -36,12 +54,30 @@ const post: Post = {
     h2("The three Core Web Vitals, in plain English"),
     table(
       ["Metric", "What it measures", "Good", "Needs improvement", "Poor"],
-      ["LCP: Largest Contentful Paint", "How quickly the main content appears", "≤ 2.5 s", "2.5–4.0 s", "> 4.0 s"],
-      ["INP: Interaction to Next Paint", "How quickly the page responds when you click or type", "≤ 200 ms", "200–500 ms", "> 500 ms"],
-      ["CLS: Cumulative Layout Shift", "How much the layout jumps while loading", "≤ 0.1", "0.1–0.25", "> 0.25"],
+      [
+        "LCP: Largest Contentful Paint",
+        "How quickly the main content appears",
+        "≤ 2.5 s",
+        "2.5–4.0 s",
+        "> 4.0 s",
+      ],
+      [
+        "INP: Interaction to Next Paint",
+        "How quickly the page responds when you click or type",
+        "≤ 200 ms",
+        "200–500 ms",
+        "> 500 ms",
+      ],
+      [
+        "CLS: Cumulative Layout Shift",
+        "How much the layout jumps while loading",
+        "≤ 0.1",
+        "0.1–0.25",
+        "> 0.25",
+      ],
     ),
     p(
-      "These thresholds come from Google's [web.dev guidance](https://web.dev/articles/vitals). A page passes when at least 75% of real visits meet the \"good\" threshold for each metric. Note that **INP replaced the older First Input Delay (FID) metric in March 2024**, so articles that still talk about FID are out of date.",
+      'These thresholds come from Google\'s [web.dev guidance](https://web.dev/articles/vitals). A page passes when at least 75% of real visits meet the "good" threshold for each metric. Note that **INP replaced the older First Input Delay (FID) metric in March 2024**, so articles that still talk about FID are out of date.',
     ),
     h2("Do Core Web Vitals affect Google rankings?"),
     p(
@@ -98,7 +134,7 @@ const post: Post = {
     ),
     h2("The bottom line"),
     p(
-      "Core Web Vitals turn \"the website feels slow\" into numbers you can fix. Improve loading, responsiveness and stability on your money pages and you will usually see benefits in both search visibility and conversions. Our [digital marketing and SEO team](/services/digital-marketing) can audit your site and prioritise the fixes with the biggest impact.",
+      'Core Web Vitals turn "the website feels slow" into numbers you can fix. Improve loading, responsiveness and stability on your money pages and you will usually see benefits in both search visibility and conversions. Our [digital marketing and SEO team](/services/digital-marketing) can audit your site and prioritise the fixes with the biggest impact.',
     ),
   ],
   faq: [
@@ -120,7 +156,11 @@ const post: Post = {
     },
   ],
   references: [
-    { title: "Web Vitals", publisher: "web.dev (Google)", url: "https://web.dev/articles/vitals" },
+    {
+      title: "Web Vitals",
+      publisher: "web.dev (Google)",
+      url: "https://web.dev/articles/vitals",
+    },
     {
       title: "Understanding Core Web Vitals and Google search results",
       publisher: "Google Search Central",
@@ -132,7 +172,8 @@ const post: Post = {
       url: "https://developers.google.com/search/docs/appearance/page-experience",
     },
     {
-      title: "Find out how you stack up to new industry benchmarks for mobile page speed",
+      title:
+        "Find out how you stack up to new industry benchmarks for mobile page speed",
       publisher: "Think with Google",
       url: "https://www.thinkwithgoogle.com/marketing-strategies/app-and-mobile/mobile-page-speed-new-industry-benchmarks/",
     },

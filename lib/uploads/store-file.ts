@@ -1,7 +1,15 @@
 import { saveUploadedFile } from "@/lib/api/helpers";
 
 function toDataUrl(file: File, buffer: Buffer): string {
-  const mime = file.type || "application/octet-stream";
+  // Derive the type from the extension so an uploaded "resume" can't be served as HTML/SVG.
+  const ext = file.name.split(".").pop()?.toLowerCase() || "";
+  const mime =
+    {
+      pdf: "application/pdf",
+      doc: "application/msword",
+      docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      txt: "text/plain",
+    }[ext] || "application/octet-stream";
   const name = encodeURIComponent(file.name);
   return `data:${mime};name=${name};base64,${buffer.toString("base64")}`;
 }

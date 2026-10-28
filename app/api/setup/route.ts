@@ -1,6 +1,8 @@
 export const dynamic = "force-dynamic";
 
 import bcrypt from "bcryptjs";
+import { timingSafeEqual } from "crypto";
+import { clientIp, isRateLimited, tooManyRequests } from "@/lib/api/rate-limit";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import { User } from "@/lib/db/models/User";
@@ -9,6 +11,10 @@ import { errorResponse } from "@/lib/api/helpers";
 export async function POST(request: Request) {
   try {
     await connectDB();
+
+    if (await isRateLimited(`setup:${clientIp(request)}`, 5, 3600)) {
+      return tooManyRequests(3600);
+    }
 
     const body = (await request.json()) as {
       username?: string;
@@ -24,7 +30,9 @@ export async function POST(request: Request) {
     const userCount = await User.countDocuments();
 
     if (userCount > 0) {
-      if (!expectedKey || setupKey !== expectedKey) {
+      const a = Buffer.from(setupKey);
+      const b = Buffer.from(expectedKey || "");
+      if (!expectedKey || a.length !== b.length || !timingSafeEqual(a, b)) {
         return errorResponse("Setup is locked. Provide a valid setupKey.", 403);
       }
     }
@@ -52,20 +60,7 @@ export async function POST(request: Request) {
   }
 }
 
+// Deliberately reveals nothing about existing admin accounts.
 export async function GET() {
-  try {
-    await connectDB();
-    const userCount = await User.countDocuments();
-    return NextResponse.json({
-      configured: userCount > 0,
-      userCount,
-      message:
-        userCount > 0
-          ? "Admin user exists. POST to this endpoint with setupKey to add another."
-          : "No admin user yet. POST { username, password } to create the first admin.",
-    });
-  } catch (error) {
-    console.error("GET /api/setup:", error);
-    return errorResponse("Database is not connected.", 500);
-  }
+  return NextResponse.json({ message: "POST { username, password, setupKey } to create an admin." });
 }
