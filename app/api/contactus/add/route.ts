@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/db/connect";
 import { Contact } from "@/lib/db/models/Contact";
 import { errorResponse, readJsonBody } from "@/lib/api/helpers";
 import { isSpam } from "@/lib/spam";
+import { notifyOwner } from "@/lib/notify";
 
 export async function POST(request: Request) {
   try {
@@ -39,6 +40,12 @@ export async function POST(request: Request) {
       message,
       contactedAt: new Date(),
     });
+
+    await notifyOwner(
+      `New contact message from ${name}`,
+      { Name: name, Email: email, Phone: phone, Message: message },
+      email,
+    );
 
     return NextResponse.json({ success: true, contact });
   } catch (error) {

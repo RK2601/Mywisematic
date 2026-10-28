@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { notifyOwner } from "@/lib/notify";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import { Application } from "@/lib/db/models/Application";
@@ -72,6 +73,19 @@ export async function POST(request: Request) {
       coverLetter,
       cvResume,
     });
+
+    await notifyOwner(
+      `New job application: ${jobName} — ${fullName}`,
+      {
+        Job: jobName,
+        Name: fullName,
+        Email: email,
+        Phone: phone,
+        "Cover letter": coverLetter.startsWith("http") ? "" : coverLetter,
+        Files: "Open the admin panel → View Applications to download",
+      },
+      email,
+    );
 
     return NextResponse.json({ success: true, application });
   } catch (error) {
