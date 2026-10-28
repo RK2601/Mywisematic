@@ -47,6 +47,7 @@ export function ContactForm() {
       email: get("email"),
       phone: get("phone"),
       message: get("message"),
+      website: get("website"),
     };
 
     if (!payload.name || !payload.email || !payload.message) {
@@ -158,6 +159,15 @@ export function ContactForm() {
                 exit={{ opacity: 0 }}
                 className="flex flex-col gap-5"
               >
+                {/* Honeypot: hidden from people, filled by bots */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                />
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div className="grid gap-2">
                     <Label htmlFor="name">Name</Label>

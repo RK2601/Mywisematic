@@ -4,16 +4,22 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import { Newsletter } from "@/lib/db/models/Newsletter";
 import { errorResponse, readJsonBody } from "@/lib/api/helpers";
+import { isSpam } from "@/lib/spam";
 
 export async function POST(request: Request) {
   try {
     await connectDB();
 
-    const body = await readJsonBody<{ email?: string }>(request);
+    const body = await readJsonBody<{ email?: string; website?: string }>(request);
     const email = body.email?.trim().toLowerCase() || "";
 
     if (!email) {
       return errorResponse("Email is required.");
+    }
+
+    // Pretend success so bots don't learn they were blocked.
+    if (isSpam({ email, website: body.website })) {
+      return NextResponse.json({ success: true });
     }
 
     const existing = await Newsletter.findOne({ email });

@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/connect";
 import { Contact } from "@/lib/db/models/Contact";
 import { errorResponse, readJsonBody } from "@/lib/api/helpers";
+import { isSpam } from "@/lib/spam";
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
       email?: string;
       phone?: string;
       message?: string;
+      website?: string;
     }>(request);
 
     const name = body.name?.trim() || "";
@@ -23,6 +25,11 @@ export async function POST(request: Request) {
 
     if (!name || !email || !message) {
       return errorResponse("Name, email, and message are required.");
+    }
+
+    // Pretend success so bots don't learn they were blocked.
+    if (isSpam({ email, message, website: body.website })) {
+      return NextResponse.json({ success: true });
     }
 
     const contact = await Contact.create({

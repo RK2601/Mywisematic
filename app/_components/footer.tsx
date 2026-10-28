@@ -34,6 +34,9 @@ export default function Footer() {
         },
         body: JSON.stringify({
           email,
+          website: String(
+            new FormData(event.currentTarget).get("website") || "",
+          ),
         }),
       });
       const data = await response.json();
@@ -79,6 +82,8 @@ export default function Footer() {
             </p>
 
             <form onSubmit={handleSubmit} className="relative w-full max-w-xs">
+              {/* Honeypot: hidden from people, filled by bots */}
+              <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
               <Input
                 type="email"
                 placeholder="Enter your email"
@@ -275,6 +280,8 @@ export default function Footer() {
                 onSubmit={handleSubmit}
                 className="relative w-full max-w-xs"
               >
+              {/* Honeypot: hidden from people, filled by bots */}
+              <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
                 <Input
                   type="email"
                   placeholder="Enter your email"
