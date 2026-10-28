@@ -7,6 +7,14 @@ export function isDotStuffedEmail(email: string): boolean {
   return (local.match(/\./g) || []).length >= 3;
 }
 
+// Domains that only ever sent spam. Add more here as they show up.
+const BLOCKED_DOMAINS = ["northmail.web.id"];
+
+export function isBlockedDomain(email: string): boolean {
+  const domain = email.toLowerCase().split("@")[1] || "";
+  return BLOCKED_DOMAINS.some((d) => domain === d || domain.endsWith("." + d));
+}
+
 // A single random token like "yjEqWhFPqxmitPPVC": no spaces, long, mixed case.
 export function isGibberish(text: string): boolean {
   const t = text.trim();
@@ -15,5 +23,5 @@ export function isGibberish(text: string): boolean {
 
 // `website` is a hidden honeypot field; humans never see it, bots fill it.
 export function isSpam(f: { email?: string; message?: string; website?: string }): boolean {
-  return !!f.website || isDotStuffedEmail(f.email || "") || (f.message !== undefined && isGibberish(f.message));
+  return !!f.website || isBlockedDomain(f.email || "") || isDotStuffedEmail(f.email || "") || (f.message !== undefined && isGibberish(f.message));
 }
